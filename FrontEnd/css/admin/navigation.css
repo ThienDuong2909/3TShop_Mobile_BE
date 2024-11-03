@@ -1,0 +1,81 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Lexend Exa';
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.navigation__bar {
+    background-color: #222831;
+    width: fit-content;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    row-gap: 70px;
+    align-items: center;
+    position: relative;
+    padding: 0 8px;
+}
+
+#logo__shop {
+    position: relative;
+    top: 16px;
+    height: 80px;
+    width: 80px;
+}
+
+#staff__info > h4{
+    color: #FFFFFF;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+#staff__title {
+    font-weight: 200;
+}
+
+#staff__name {
+    font-weight: 500;
+}
+
+#function__bar {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.manage__items {
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #FFFFFF;
+}
+
+.logout__wrapper {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    bottom: 12px;
+    background-color: white;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.logout__wrapper > span, .logout__wrapper > h5 {
+    color: #222831;
+}

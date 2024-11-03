@@ -180,7 +180,7 @@ body{
 .filter .filter-tool, .sort-tool{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 40px;
 }
 
 .filter span{
@@ -191,6 +191,7 @@ body{
 .filter select{
     border: 1px #D0D0D0 solid;
     height: 30px;
+    padding: 0 4px;
     border-radius: 4px;
     color: #825B32;
     font-family: Lexend Exa;
@@ -198,5 +199,5 @@ body{
     font-weight: 400;
     line-height: 13px;
     text-align: left;
-
+    outline: none;
 }

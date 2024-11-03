@@ -17,6 +17,7 @@
 
 .header-bg .heading{
     top: 212px;
+    margin-left: 20px;
     color: #ffff;
     position: absolute;
     font-size: 32px;
@@ -75,6 +76,7 @@
     font-family: Lexend Zetta;
     margin: 0;
     padding: 0;
+    padding-left: 8px;
 }
 
 .gender-radio{
@@ -124,6 +126,13 @@ button:disabled{
     background-color: #D0D0D0;
     color: #222831;
 }
+
+.group-button .cancel-edit{
+    display: none;
+    background-color: #D0D0D0;
+    color: #222831;
+}
+
 .group-button .save, .change-password{
     color: #FFFFFF;
     background-color: #825B32;
@@ -248,4 +257,162 @@ button:disabled{
 
 .other-address{
     margin-top: 30px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+
+#modal-add-address{
+    background-color: #2e2d2d3d;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#modal-add-address .modal-body{
+    margin: auto;
+    background-color: #ffff;
+    padding: 10px 40px;
+    border-radius: 8px;
+}
+
+.modal-body .title{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal-body .title h4{
+    width: 100%;
+    font-family: Lexend Giga;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 20px;
+    margin: 0;
+    text-align: center;
+    color: #825B32;
+}
+
+.modal-body .form-content{
+    display: grid;
+    grid-template-columns: 2fr 4fr;
+}
+
+.form-content .content{
+    width: 550px;
+}
+
+.form-content .img-div{
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 100%;
+}
+
+.img-div span{
+    font-size: 150px;
+    width: 100%;
+    margin-left: 30px;
+}
+
+.modal-body span{
+    display: block;
+    text-align: right;
+    cursor: pointer;
+    color: #825B32;
+    margin-right: -30px !important;
+}
+
+.modal-body .btn-container{
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.btn-container button{
+    height: 40px;
+    width: 133px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    font-family: Lexend Giga;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    text-align: center;
+    cursor: pointer;
+}
+.btn-container .cancel{
+    background-color: #EAEAEA;
+    color: #222831;
+}
+.btn-container .submit{
+    background-color: #825B32;
+    color: #ffff;
+}
+
+#modal-add-address .content h5{
+    font-family: Lexend Giga;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 14px;
+    text-align: left;
+    color: #222831;
+    margin: 30px 0 10px 0
+}
+
+#modal-add-address .div-group-1{
+    border: 1px #D9D9D9 solid;
+    outline: hidden;
+    border-radius: 4px;
+    padding: 20px;
+    gap: 30px;
+}
+
+#modal-add-address .div-group-2{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+#modal-add-address .infor-group{
+    display: grid !important;
+    grid-template-columns: 3fr 2fr !important;
+}
+
+#modal-add-address .group-infor{
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-add-address .div-group-1 label{
+    font-family: Lexend Exa;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 14px;
+    text-align: left;
+    color: #825B32;
+    margin-bottom: 12px;
+}
+
+#modal-add-address input{
+    border: none;
+    border-bottom: 1px #D9D9D9 solid;
+    font-size: 16px;
+    outline: none;
+    font-family: Lexend Giga;
+    width: 100%;
 }

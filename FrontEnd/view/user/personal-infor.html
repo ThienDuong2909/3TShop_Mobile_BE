@@ -28,35 +28,36 @@
                 <form action="" id="personal-infor-form">
                     <div class="group-form">
                         <label for="name">Họ và tên</label>
-                        <input type="text" name="name">
+                        <input readonly type="text" name="name">
                     </div>
                     <div class="group-form">
                         <label for="sdt">Số điện thoại</label>
-                        <input type="number" name="sdt">
+                        <input readonly type="number" name="sdt">
                     </div>
                     <div class="group-form">
                         <label for="birthday">Ngày sinh</label>
-                        <input type="date" name="birthday">
+                        <input readonly type="date" name="birthday">
                     </div>
                     <div class="group-form">
                         <label for="gender">Giới tính</label>
                         <div class="gender-radio">
                             <div>
-                                <input type="radio" id="male" name="gender" value="male">
+                                <input readonly type="radio" id="male" name="gender" value="male">
                                 <label for="male">Nam</label><br>
                             </div>
                             <div>
-                                <input type="radio" id="female" name="gender" value="female">
+                                <input readonly type="radio" id="female" name="gender" value="female">
                                 <label for="female">Nữ</label><br>
                             </div>
                         </div>
                     </div>
                     <div class="group-form">
                         <label for="email">Email</label>
-                        <input type="email" name="email">
+                        <input readonly type="email" name="email">
                     </div>
                     <div class="group-button">
                         <button class="edit">Sửa thông tin</button>
+                        <button class="cancel-edit">Hủy bỏ</button>
                         <button disabled class="save" type="submit">Lưu thay đổi</button>
                     </div>
                 </form>
@@ -185,7 +186,69 @@
                 </div>
             </div>
         </div>
+        <div id="modal-add-address">
+            <div class="modal-body">
+                <span class=" close material-symbols-outlined">
+                    close
+                </span>
+                <div class="title">
+                    <h4>THÊM ĐỊA CHỈ GIAO HÀNG</h4>
+                </div>
+                <div class="form-content">
+                    <div class="img-div">
+                        <span class="material-symbols-outlined">
+                            distance
+                        </span> 
+                    </div>
+                    <div class="content">
+                        <h5>Thông tin người nhận</h5>
+                        <div class="div-group-1 infor-group">
+                            <div class="group-infor">
+                                <label for="">Họ và tên</label>
+                                <input type="text">
+                            </div>
+                            <div class="group-infor">
+                                <label for="">Số điện thoại</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <h5>Địa chỉ</h5>
+                        <div class="div-group-1">
+                            <div class="div-group-2">
+                                <div class="group-infor">
+                                    <label for="">Tỉnh/Thành phố</label>
+                                    <input type="text">
+                                </div>
+                                <div class="group-infor">
+                                    <label for="">Quận/Huyện</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="div-group-2">
+                                <div class="group-infor">
+                                    <label for="">Xã/Phường/Thị Trấn</label>
+                                    <input type="text">
+                                </div>
+                                <div class="group-infor">
+                                    <label for="">Thôn/Ấp</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="group-infor">
+                                <label for="">Địa chỉ chi tiết</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="btn-container">
+                    <button class="cancel">Hủy</button>
+                    <button class="submit">Lưu</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <script type="module" src="../../js/user/home/personal-infor.js"></script>
+    <script type="module" src="../../js/user/page/personal-infor.js"></script>
 </body>
 </html>

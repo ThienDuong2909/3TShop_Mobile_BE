@@ -208,3 +208,90 @@
         opacity: 0; 
     }
 }
+
+
+#logout{
+    background-color: #2e2d2d3d;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#logout .modal-logout{
+    width: 405px;
+    margin: auto;
+    background-color: #ffff;
+    border-radius: 8px;
+}
+
+.modal-logout>span{
+    display: block;
+    text-align: right;
+    cursor: pointer;
+    color: #825B32;
+    padding: 10px;
+}
+.modal-logout .content{
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+}
+
+.content h4{
+    text-align: center;
+    font-family: Lexend Giga;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 20px;
+    color: #825B32;
+    margin: 8px 0;
+}
+.content p{
+    font-family: Lexend Zetta;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 21px;
+    text-align: center;
+    color: #825B32;
+}
+.modal-logout .content div{
+    display: flex;
+    justify-content: center;
+}
+
+.content .btn-container{
+    margin-top: 10px;
+    justify-content: space-between !important;
+}
+.content img{
+    width: 110px;
+
+}
+.btn-container a{
+    width: 132px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: Lexend Giga;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.btn-container .cancel{
+    color: #222831;
+    background-color: #EAEAEA;
+}
+
+.btn-container .submit{
+    color: #ffff;
+    background-color: #825B32;
+}

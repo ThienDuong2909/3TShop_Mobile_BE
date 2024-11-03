@@ -132,8 +132,13 @@
     cursor: pointer;
 }
 
-.quantity p{
+.quantity input{
+    border: none;
+    text-align: center;
+    outline: none;
     font-size: 24px;
+    font-family: Lexend Exa;
+    width: 30px;
     color: #825B32;
     margin: 0;
 }
@@ -331,7 +336,7 @@
     left: 0;
     right: 0;
     z-index: 200;
-    display: flex;
+    display: none;
     flex-direction: row;
     justify-content: center;
 }

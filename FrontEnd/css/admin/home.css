@@ -1,0 +1,238 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Lexend Exa';
+    font-weight: 400;
+    color: #222831;
+    font-size: 12px;
+    user-select: none;
+    -webkit-user-select: none; 
+    -moz-user-select: none;
+    -ms-user-select: none; 
+}
+
+.wrapper {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#title__category, #title__list__product {
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 16px;
+}
+
+#category__and__search {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#list__category__wrapper {
+    width: 576px;
+    border-radius: 50px;
+    border: 1px solid #222831;
+}
+
+#list__category {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin: 4px;
+    overflow: scroll;
+    scrollbar-width: none;
+    border-radius: 50px;
+}
+
+.each__category {
+    background-color: #C3CBD5;
+    text-wrap: nowrap;
+    padding: 4px 6px;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+}
+
+.each__category > h5 {
+    color: white;
+    font-weight: 300;
+}
+
+#search__product__wrapper {
+    display: flex;
+    flex-direction: row;
+    border: 2px solid #D0D0D0;
+    border-radius: 50px;
+    gap: 8px;
+    align-items: center;
+    width: 350px;
+    position: absolute;
+    right: 0;
+    height: 100%;
+}
+
+#search__icon {
+    margin-left: 4px;
+    width: 20px;
+    height: 20px;
+}
+
+#input__search {
+    border: none;
+    margin-right: 4px;
+    font-size: 12px;
+    outline: none;;
+}
+
+.show__product {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#filter__and__sort__wrapper {
+    width: 576px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#filter__wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.filter__product {
+    border: 1px solid #D0D0D0;
+    border-radius: 50px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+#sort__wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+#sort__combobox__wrapper {
+    padding: 4px 8px;
+    border-radius: 50px;
+    border: 1px solid #D0D0D0;
+}
+
+#sort__combobox {
+    outline: none;
+    border: none;
+}
+
+#product__management {
+    width: 576px;
+}
+
+#add__new__and__column__name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 576px;
+    gap: 30px;
+}
+
+#attribute__col {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 2
+}
+
+#col__price {
+    margin-left: 34px;
+    font-size: 14px;
+}
+
+#col__sold {
+    margin-left: 36px;
+    font-size: 14px;
+}
+
+#col__stock {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+#add__new__product__wrapper {
+    width: fit-content;
+    background-color: #222831;
+    padding: 8px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+}
+
+#add__new__product__wrapper:active {
+    transform: scale(0.95);
+    transition: all 0.3s ease-in-out;
+}
+
+#add__new__product__wrapper > span {
+    color: white;
+}
+
+#list__prouduct__wrapper {
+    width: 576px;
+    height: 38%;
+    overflow: scroll;
+    scrollbar-width: thin;
+    margin-top: 20px;
+    border: 2px solid #D0D0D0;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.product__item {
+    display: flex;
+    flex-direction: column;
+    border-top: 2px solid #D0D0D0 ;
+}
+
+.info__product__wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product__image {
+    height: 70px;
+    width: 70px;
+}
+
+.item__name {
+    color: #825B32;
+    font-weight: 500;
+}
+
+#operation__wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: end;
+    border-top: 1px solid #D0D0D0;
+    padding: 6px;
+}
+
+#operation__wrapper >span {
+    cursor: pointer;
+}
+
+#edit__info__product:active, #toggle__product:active {
+    transform: scale(0.5);
+    transition: all 1s ease-in-out;
+}

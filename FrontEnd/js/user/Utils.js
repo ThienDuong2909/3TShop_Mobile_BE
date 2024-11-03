@@ -14,16 +14,18 @@ export default class Utils{
                     </div>
 
                     <div class="menu-icons">
-                        <i class="material-symbols-outlined">
-                            shopping_cart
-                        </i>
+                        <a href = "/cart">
+                            <i class="material-symbols-outlined">
+                                shopping_cart
+                            </i>
+                        </a>
                         <div>
                             <i class="material-symbols-outlined menu-btn">
                                 account_circle
                             </i>
                             <ul class="nav">
                                 <li>
-                                    <a href="">
+                                    <a href="/personal-infor">
                                         Tài khoản của bạn
                                         <span class="material-symbols-outlined">
                                             shield_person
@@ -31,14 +33,14 @@ export default class Utils{
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="">
+                                    <a href="/order">
                                         Đơn hàng
                                         <span class="material-symbols-outlined">
                                             package_2
                                         </span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="btn-logout">
                                     <a href="#">
                                         Đăng xuất
                                         <span class="material-symbols-outlined">
@@ -53,6 +55,24 @@ export default class Utils{
                 <div id="toast-container">
                     
                 </div>
+                <div id="logout">
+                    <div class="modal-logout">
+                        <span class="close material-symbols-outlined">
+                            close
+                        </span>
+                        <div class="content">
+                            <div>
+                                <img src="../../img/utils/quit.png" />
+                            </div>
+                            <h4>ĐĂNG XUẤT</h4>
+                            <p>Bạn có chắc chẵn đăng xuất tài khoản không</p>
+                            <div class="btn-container">
+                                <a class="cancel">Thoát</a>
+                                <a href="/login" class="submit">Đăng xuất</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </header>
         `
         document.body.insertAdjacentHTML('afterbegin', html) 
@@ -65,6 +85,24 @@ export default class Utils{
         if (menuBtn) {
             menuBtn.addEventListener('click', openMenu);
         }
+        const logoutContainer = document.querySelector("#logout")
+        const close = document.querySelector("#logout .close")
+        const cancel = document.querySelector("#logout .cancel")
+        const btnLogout = document.querySelector(".btn-logout")
+        btnLogout.addEventListener("click",()=>{
+            this.openModal(logoutContainer)
+        })
+        close.addEventListener("click",()=>{
+            this.closeModal(logoutContainer)
+        })
+        cancel.addEventListener("click",()=>{
+            this.closeModal(logoutContainer)
+        })
+        logoutContainer.addEventListener("click",(e)=>{
+            if(e.target === logoutContainer){
+                this.closeModal(logoutContainer)
+            }
+        })
     }
 
     static getToast(type){
@@ -227,22 +265,22 @@ export default class Utils{
         const html  = `
         <div class="item-list">
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category1.png" alt=""></a>
+                <a href="/hoodie"><img src="../../img/items/Category1.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category2.png" alt=""></a>
+                <a href="/t-shirt"><img src="../../img/items/Category2.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category3.png" alt=""></a>
+                <a href="/short"><img src="../../img/items/Category3.png" alt=""></a>
                 </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category4.png" alt=""></a>
+                <a href="/paint"><img src="../../img/items/Category4.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category5.png" alt=""></a>
+                <a href="/jean"><img src="../../img/items/Category5.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/view/user/tee.html"><img src="../../img/items/Category6.png" alt=""></a>
+                <a href="/tee"><img src="../../img/items/Category6.png" alt=""></a>
             </div>
         </div>
         <button class="prev prev-item">
@@ -315,6 +353,17 @@ export default class Utils{
     static openModal = (e)=>{
         e.style.display = "flex"
     }
-    
+    static protectUser = ()=>{
+        const role = localStorage.getItem("role")
+        if(role !== "user"){
+            window.location.href = "/login"
+        }
+    }
 
+    static protectAdmin = ()=>{
+        const role = localStorage.getItem("role")
+        if(role !== "admin"){
+            window.location.href = "/login"
+        }
+    }
 }
