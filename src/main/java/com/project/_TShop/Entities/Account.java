@@ -34,8 +34,11 @@ public class Account implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name="reset_password_token",columnDefinition = "varchar(65)",nullable = false)
-    private String reset_password_token;
+    @Column(name="reset_password_token",columnDefinition = "varchar(50)")
+    private String resetPasswordToken;
+
+    @Column(name="registrationToken",columnDefinition = "varchar(50)")
+    private String registrationToken;
 
     @Column(name="auth_provider",columnDefinition = "varchar(20)",nullable = false)
     private String auth_provider;
@@ -82,7 +85,7 @@ public class Account implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
 }
