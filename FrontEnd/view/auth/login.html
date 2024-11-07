@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../../css/auth/login.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Exa:wght@100..900&family=Lexend+Zetta:wght@100..900&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a9788993db.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>3TShop - ĐĂNG NHẬP</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="content">
+        <img src="/FrontEnd/img/utils/LOGO_3TSHOP_ADMIN.png" class="logo_img" />
+        <h2 class="wellcome__title">CHÀO MỪNG BẠN</h2>
+        <div class="login__form">
+          <div class="username__box">
+            <label class="label_input" for="username__input"
+              >Tên tài khoản</label
+            >
+            <input type="text" id="username__input" class="__input" />
+          </div>
+          <div class="password__box">
+            <label class="label_input" for="password__input">Mật khẩu</label>
+            <input
+              type="password"
+              id="password__input"
+              class="__input"
+              oninput="toggleEyeIcons()"
+            />
+            <i
+              class="fa-regular fa-eye toggle__eye toggle"
+              onclick="togglePassword()"
+              style="display: none"
+            ></i>
+            <i
+              class="fa-regular fa-eye-slash toggle__eye__slash toggle"
+              onclick="togglePassword()"
+              style="display: none"
+            ></i>
+          </div>
+          <div class="forgot__password__box">
+            <a href="">Quên mật khẩu?</a>
+          </div>
+          <div class="action_form">
+            <button id="login__btn" class="btn__login">Đăng nhập</button>
+            <span>hoặc</span>
+            <button id="google__login__btn" class="btn__login">
+              <img src="/FrontEnd/img/utils/google_logo.png" />
+              Đăng nhập với Google
+            </button>
+            <span
+              >Bạn chưa có tài khoản?
+              <a href="">Đăng ký</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="../../js/auth/login.js"></script>
+</html>
