@@ -43,6 +43,7 @@ public class AuthenticationService {
         if(isEmailOrUsernameExists(request)){
             response.setStatus(409);
             response.setMessage("Email or username is used");
+            return response;
         }
         Collection<Role> roles = new ArrayList<>();
         Optional<Role> optionalRole = roleRepo.findByName("USER");
