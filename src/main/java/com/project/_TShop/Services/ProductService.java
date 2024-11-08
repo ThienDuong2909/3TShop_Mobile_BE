@@ -2,7 +2,6 @@ package com.project._TShop.Services;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.Entities.Category;
@@ -20,9 +19,11 @@ import com.project._TShop.Utils.Utils;
 @RequiredArgsConstructor
 public class ProductService {
 @Autowired
+
     ProductRepository productRepository;
     @Autowired
     CategoryRepository categoryRepository;
+
 
     public Response getAll(){
         Response response = new Response();

@@ -21,26 +21,26 @@ public class CartService {
     private final AccountRepository accountRepo;
 
 
-    public Optional<User> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Optional.empty();
-        }
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return Optional.ofNullable(userRepo.findByAccount_Username(username));
-    }
-
-    public Response getUserInfo() {
-        Response response = new Response();
-        Optional<User> currentUser = getCurrentUser();
-        if (currentUser.isEmpty()) {
-            response.setStatus(404);
-            response.setMessage("message: Not found User Info");
-        } else {
-            response.setStatus(200);
-            response.setUserDTO(Utils.mapUser(currentUser.get()));
-        }
-        return response;
-    }
+//    public Optional<User> getCurrentUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return Optional.empty();
+//        }
+//        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+//        return Optional.ofNullable(userRepo.findByAccount_Username(username));
+//    }
+//
+//    public Response getUserInfo() {
+//        Response response = new Response();
+//        Optional<User> currentUser = getCurrentUser();
+//        if (currentUser.isEmpty()) {
+//            response.setStatus(404);
+//            response.setMessage("message: Not found User Info");
+//        } else {
+//            response.setStatus(200);
+//            response.setUserDTO(Utils.mapUser(currentUser.get()));
+//        }
+//        return response;
+//    }
 }
 

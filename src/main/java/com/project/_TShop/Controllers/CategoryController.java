@@ -25,4 +25,11 @@ public class CategoryController {
         Response response = categoryService.addCategory(categoryDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @PutMapping("/update-category")
+    public ResponseEntity<Response> updateCategory(
+            @RequestBody CategoryDTO categoryDTO
+    ){
+        Response response = categoryService.updateCategory(categoryDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

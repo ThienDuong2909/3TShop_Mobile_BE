@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.project._TShop.Entities.Category;
+
 import com.project._TShop.Entities.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -16,6 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "SELECT * FROM Product ORDER BY created_at DESC LIMIT 10", nativeQuery = true)
     List<Product> findTop10ByCreatedAtDescNative();
+
     @Query(value = "SELECT * FROM Product WHERE category_id = ?1", nativeQuery = true)
     List<Product> findByCategory(Integer id);
+
 }
