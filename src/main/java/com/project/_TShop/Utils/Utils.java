@@ -67,7 +67,7 @@ public class Utils {
         return roleDTO;
     }
 
-    public static ProductDTO maProduct(Product product){
+    public static ProductDTO mapProduct(Product product){
         ProductDTO productDTO = new ProductDTO();
         productDTO.setCategoryDTO(mapCategory(product.getCategory_id()));
         productDTO.setCreate_at(product.getCreated_at());
@@ -96,7 +96,7 @@ public class Utils {
         ImagesDTO imagesDTO = new ImagesDTO();
         imagesDTO.setImage_data(images.getImage_data());
         imagesDTO.setImage_id(images.getImage_id());
-        imagesDTO.setProductDTO(maProduct(images.getProduct()));
+        imagesDTO.setProductDTO(mapProduct(images.getProduct()));
         return imagesDTO;
     }
 
@@ -125,7 +125,7 @@ public class Utils {
         Order_DetailDTO order_DetailDTO = new Order_DetailDTO();
         order_DetailDTO.setOrderDTO(mapOrder(order_Detail.getOrder()));
         order_DetailDTO.setOrder_detail_id(order_Detail.getOrder_detail_id());
-        order_DetailDTO.setProductDTO(maProduct(order_Detail.getProduct()));
+        order_DetailDTO.setProductDTO(mapProduct(order_Detail.getProduct()));
         order_DetailDTO.setQuantity(order_Detail.getQuantity());
         return order_DetailDTO;
     }
@@ -149,7 +149,7 @@ public class Utils {
         cart_ItemsDTO.setCard_item_id(cart_Items.getCart_items_id());
         cart_ItemsDTO.setCartDTO(mapCart(cart_Items.getCart()));
         cart_ItemsDTO.setCreate_at(cart_Items.getCreated_at());
-        cart_ItemsDTO.setProductDTO(maProduct(cart_Items.getProduct()));
+        cart_ItemsDTO.setProductDTO(mapProduct(cart_Items.getProduct()));
         cart_ItemsDTO.setQuantity(cart_Items.getQuantity());
         return cart_ItemsDTO;
     }
@@ -157,7 +157,7 @@ public class Utils {
     public static SpecificationsDTO mapSpecifications(Specifications specifications){
         SpecificationsDTO specificationsDTO = new SpecificationsDTO();
         specificationsDTO.setColorDTO(mapColor(specifications.getColor()));
-        specificationsDTO.setProductDTO(maProduct(specifications.getProduct()));
+        specificationsDTO.setProductDTO(mapProduct(specifications.getProduct()));
         specificationsDTO.setQuantity(specifications.getQuantity());
         specificationsDTO.setSizeDTO(mapSize(specifications.getSize_id()));
         specificationsDTO.setSpecifications_id(specifications.getSpecifications_id());
@@ -187,7 +187,7 @@ public class Utils {
         return orders.stream().map(Utils::mapOrder).collect(Collectors.toList());
     }
     public static List<ProductDTO> mapProducts(List<Product> products){
-        return products.stream().map(Utils::maProduct).collect(Collectors.toList());
+        return products.stream().map(Utils::mapProduct).collect(Collectors.toList());
     }
     public static List<ColorDTO> mapColors(List<Color> colors){
         return colors.stream().map(Utils::mapColor).collect(Collectors.toList());

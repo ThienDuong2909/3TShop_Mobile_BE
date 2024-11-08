@@ -37,4 +37,20 @@ public class ProductController {
         Response response = productService.addProduct(productDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+    @GetMapping("get-by-id/{id}")
+    public ResponseEntity<Response> getById(
+            @PathVariable("id") Integer id
+            ){
+        Response response = productService.getById(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("get-by-category-id/{id}")
+    public ResponseEntity<Response> getByCategory(
+            @PathVariable("id") Integer id
+            ){
+        Response response = productService.getById(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
