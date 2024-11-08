@@ -52,6 +52,7 @@ public class AuthenticationService {
         } else {
             response.setStatus(404);
             response.setMessage("Default Role not found");
+            return response;
         }
         String registrationToken = RandomString.make(50);
         var user = Account.builder()
