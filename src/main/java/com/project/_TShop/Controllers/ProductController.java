@@ -21,4 +21,14 @@ public class ProductController {
         Response response = productService.getAll();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @GetMapping("get-hot-products")
+    public ResponseEntity<Response> getHotProduct(){
+        Response response = productService.getHotProducts();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("get-new-products")
+    public ResponseEntity<Response> getNewProduct(){
+        Response response = productService.getNewProducts();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
