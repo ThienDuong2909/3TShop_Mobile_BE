@@ -10,11 +10,11 @@ public class ProductDTO {
     private Integer product_id;
     private String name;
     private BigDecimal price;
-    private String descriptipn;
+    private String description;
     private String image;
     private int sold;
-    private String which_gender;
+    private Boolean which_gender;
     private Date create_at;
-    private String status;
+    private int status;
     private CategoryDTO categoryDTO;
 }

@@ -5,6 +5,7 @@ import com.project._TShop.Entities.Auth_Provider;
 import com.project._TShop.Entities.Cart;
 import com.project._TShop.Entities.Role;
 import com.project._TShop.Repositories.AccountRepository;
+import com.project._TShop.Repositories.CartRepository;
 import com.project._TShop.Repositories.RoleRepository;
 import com.project._TShop.Request.RegisterRequest;
 import com.project._TShop.Response.AuthenticationResponse;
@@ -24,14 +25,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepo;
+    private final CartRepository cartRepo;
+
     public Response isValidRegistrationToken(String code) {
         Response response = new Response();
         Optional<Account> accountOptional = accountRepo.findByRegistrationToken(code);
         if(accountOptional.isPresent()){
             accountOptional.get().setStatus(true);
-//            var cart = Cart.builder()
-//                            .user()
+            var cart = Cart.builder()
+                            .account(accountOptional.get())
+                            .build();
             accountRepo.save(accountOptional.get());
+            cartRepo.save(cart);
             response.setStatus(200);
             response.setMessage("Verify Account success");
         }else {

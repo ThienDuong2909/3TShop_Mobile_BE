@@ -71,7 +71,7 @@ public class Utils {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setCategoryDTO(mapCategory(product.getCategory_id()));
         productDTO.setCreate_at(product.getCreated_at());
-        productDTO.setDescriptipn(product.getDescription());
+        productDTO.setDescription(product.getDescription());
         productDTO.setName(product.getName());
         productDTO.setImage(product.getImage());
         productDTO.setPrice(product.getPrice());
