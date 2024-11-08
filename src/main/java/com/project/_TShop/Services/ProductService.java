@@ -19,9 +19,11 @@ import com.project._TShop.Utils.Utils;
 @RequiredArgsConstructor
 public class ProductService {
 @Autowired
-ProductRepository productRepository;
+
+    ProductRepository productRepository;
     @Autowired
-    CategoryRepository categoryRepo;
+    CategoryRepository categoryRepository;
+
 
     public Response getAll(){
         Response response = new Response();
@@ -37,6 +39,48 @@ ProductRepository productRepository;
         }
         return response;
     }
+
+    public Response getById(Integer id){
+        Response response = new Response();
+        try {
+            Optional<Product> product = productRepository.findById(id);
+            if(product.isPresent()){
+                response.setStatus(200);
+                response.setMessage("Get product success");
+                response.setProductDTO(Utils.mapProduct(product.get()));
+            }else{
+                response.setStatus(201);
+                response.setMessage("Not found product");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response getByCategory(Integer id){
+        Response response = new Response();
+        try {
+            Optional<Category> category = categoryRepository.findById(id);
+            if(category.isPresent()){
+                List<Product> products = productRepository.findByCategory(category.get().getCategory_id());
+                response.setStatus(200);
+                response.setMessage("Get products success");
+                response.setProductDTOList(Utils.mapProducts(products));
+            }else{
+                response.setStatus(202);
+                response.setMessage("Not found categorys");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
     public Response getHotProducts(){
         Response response = new Response();
         try {
@@ -70,7 +114,7 @@ ProductRepository productRepository;
         Response response = new Response();
         try {
             System.out.println(productDTO.getCategoryDTO().getCategory_id());
-            Category category = categoryRepo.findByCategoryId(Integer.valueOf(productDTO.getCategoryDTO().getCategory_id()));
+            Category category = categoryRepository.findByCategoryId(Integer.valueOf(productDTO.getCategoryDTO().getCategory_id()));
             if (category == null) {
                 response.setStatus(400);
                 response.setMessage("Category not found");

@@ -41,7 +41,7 @@ public class UserService {
         Response response = new Response();
         Optional<User> currentUser = getCurrentUser();
         if (currentUser.isEmpty()) {
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("message: Not found User Info");
         } else {
             response.setStatus(200);

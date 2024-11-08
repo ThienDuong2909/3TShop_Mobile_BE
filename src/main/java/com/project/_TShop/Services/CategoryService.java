@@ -35,8 +35,10 @@ public class CategoryService {
     public Response addCategory(CategoryDTO categoryDTO){
         Response response = new Response();
         try {
+
             if(categoryRepository.findByName(categoryDTO.getName().toUpperCase()).isPresent()){
                 response.setStatus(209);
+
                 response.setMessage("message: Category name had been used");
                 return response;
             }
