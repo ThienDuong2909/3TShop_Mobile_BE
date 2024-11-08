@@ -191,4 +191,7 @@ public class Utils {
     public static List<ColorDTO> mapColors(List<Color> colors){
         return colors.stream().map(Utils::mapColor).collect(Collectors.toList());
     }
+    public static List<CategoryDTO> mapCategories(List<Category> categories){
+        return categories.stream().map(Utils::mapCategory).collect(Collectors.toList());
+    }
 }
