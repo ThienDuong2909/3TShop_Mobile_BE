@@ -24,11 +24,17 @@ public class UserService {
 
     public Optional<User> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        System.out.println("username: "+((UserDetails) authentication.getPrincipal()).getUsername());
+
+        if (!authentication.isAuthenticated()) {
+//            System.out.println("username: "+((UserDetails) authentication.getPrincipal()).getUsername());
             return Optional.empty();
         }
         String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return Optional.ofNullable(userRepo.findByAccount_Username(username));
+        System.out.println("username: "+ username);
+        Optional<Account> account = accountRepo.findByUsername(username);
+
+        return userRepo.findByAccount_Username(username);
     }
 
     public Response getUserInfo() {

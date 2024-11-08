@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.project._TShop.Entities.Product;
 
-public interface ProductRepo extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findTop10ByOrderBySoldDesc();
 
     // @Query("SELECT p FROM Product p ORDER BY p.created_at DESC")

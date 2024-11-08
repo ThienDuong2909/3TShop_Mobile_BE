@@ -1,20 +1,17 @@
 package com.project._TShop.Services;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import com.project._TShop.DTO.CategoryDTO;
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.Entities.Category;
-import com.project._TShop.Repositories.CategoryeRepo;
+import com.project._TShop.Repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Entities.Product;
-import com.project._TShop.Repositories.ProductRepo;
+import com.project._TShop.Repositories.ProductRepository;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
 
@@ -22,14 +19,14 @@ import com.project._TShop.Utils.Utils;
 @RequiredArgsConstructor
 public class ProductService {
 @Autowired
-    ProductRepo productRepo;
+ProductRepository productRepository;
     @Autowired
-    CategoryeRepo categoryRepo;
+    CategoryRepository categoryRepo;
 
     public Response getAll(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findAll();
+            List<Product> products = productRepository.findAll();
             response.setStatus(200);
             response.setMessage("Get all product success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -43,7 +40,7 @@ public class ProductService {
     public Response getHotProducts(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findTop10ByOrderBySoldDesc();
+            List<Product> products = productRepository.findTop10ByOrderBySoldDesc();
             response.setStatus(200);
             response.setMessage("Get hot products success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -57,7 +54,7 @@ public class ProductService {
     public Response getNewProducts(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findTop10ByCreatedAtDescNative();
+            List<Product> products = productRepository.findTop10ByCreatedAtDescNative();
             response.setStatus(200);
             response.setMessage("Get new products success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -91,7 +88,7 @@ public class ProductService {
                     .status(1)
                     .build();
 
-            productRepo.save(product);
+            productRepository.save(product);
             response.setStatus(200);
             response.setMessage("Add new product success");
         } catch (Exception e) {
