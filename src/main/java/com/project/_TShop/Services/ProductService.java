@@ -1,20 +1,18 @@
 package com.project._TShop.Services;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.project._TShop.DTO.CategoryDTO;
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.Entities.Category;
-import com.project._TShop.Repositories.CategoryeRepo;
+import com.project._TShop.Repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Entities.Product;
-import com.project._TShop.Repositories.ProductRepo;
+import com.project._TShop.Repositories.ProductRepository;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
 
@@ -22,14 +20,14 @@ import com.project._TShop.Utils.Utils;
 @RequiredArgsConstructor
 public class ProductService {
 @Autowired
-    ProductRepo productRepo;
+    ProductRepository productRepository;
     @Autowired
-    CategoryeRepo categoryRepo;
+    CategoryRepository categoryRepository;
 
     public Response getAll(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findAll();
+            List<Product> products = productRepository.findAll();
             response.setStatus(200);
             response.setMessage("Get all product success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -40,10 +38,52 @@ public class ProductService {
         }
         return response;
     }
+
+    public Response getById(Integer id){
+        Response response = new Response();
+        try {
+            Optional<Product> product = productRepository.findById(id);
+            if(product.isPresent()){
+                response.setStatus(200);
+                response.setMessage("Get product success");
+                response.setProductDTO(Utils.mapProduct(product.get()));
+            }else{
+                response.setStatus(201);
+                response.setMessage("Not found product");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response getByCategory(Integer id){
+        Response response = new Response();
+        try {
+            Optional<Category> category = categoryRepository.findById(id);
+            if(category.isPresent()){
+                List<Product> products = productRepository.findByCategory(category.get().getCategory_id());
+                response.setStatus(200);
+                response.setMessage("Get products success");
+                response.setProductDTOList(Utils.mapProducts(products));
+            }else{
+                response.setStatus(202);
+                response.setMessage("Not found categorys");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
     public Response getHotProducts(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findTop10ByOrderBySoldDesc();
+            List<Product> products = productRepository.findTop10ByOrderBySoldDesc();
             response.setStatus(200);
             response.setMessage("Get hot products success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -57,7 +97,7 @@ public class ProductService {
     public Response getNewProducts(){
         Response response = new Response();
         try {
-            List<Product> products = productRepo.findTop10ByCreatedAtDescNative();
+            List<Product> products = productRepository.findTop10ByCreatedAtDescNative();
             response.setStatus(200);
             response.setMessage("Get new products success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -73,7 +113,7 @@ public class ProductService {
         Response response = new Response();
         try {
             System.out.println(productDTO.getCategoryDTO().getCategory_id());
-            Category category = categoryRepo.findByCategoryId(Integer.valueOf(productDTO.getCategoryDTO().getCategory_id()));
+            Category category = categoryRepository.findByCategoryId(Integer.valueOf(productDTO.getCategoryDTO().getCategory_id()));
             if (category == null) {
                 response.setStatus(400);
                 response.setMessage("Category not found");
@@ -91,7 +131,7 @@ public class ProductService {
                     .status(1)
                     .build();
 
-            productRepo.save(product);
+            productRepository.save(product);
             response.setStatus(200);
             response.setMessage("Add new product success");
         } catch (Exception e) {

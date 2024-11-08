@@ -9,18 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Entities.Category;
-import com.project._TShop.Repositories.CategoryeRepo;
+import com.project._TShop.Repositories.CategoryRepository;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
     @Autowired
-    CategoryeRepo categoryeRepo;
+    CategoryRepository categoryRepository;
     public Response getAll(){
         Response response = new Response();
         try {
-            List<Category> categories = categoryeRepo.findAll();
+            List<Category> categories = categoryRepository.findAll();
             response.setStatus(200);
             response.setMessage("Get all category success");
             response.setCategoryDTOList(Utils.mapCategories(categories));
@@ -34,7 +34,7 @@ public class CategoryService {
     public Response addCategory(CategoryDTO categoryDTO){
         Response response = new Response();
         try {
-            if(categoryeRepo.findByName(categoryDTO.getName()) != null){
+            if(categoryRepository.findByName(categoryDTO.getName()) != null){
                 response.setStatus(409);
                 response.setMessage("message: Category name had been used");
                 return response;
@@ -45,7 +45,7 @@ public class CategoryService {
                     .image(categoryDTO.getImage())
                     .status(1)
                     .build();
-            categoryeRepo.save(category);
+            categoryRepository.save(category);
             response.setStatus(200);
             response.setMessage("message: Add new category success");
         } catch (Exception e) {
