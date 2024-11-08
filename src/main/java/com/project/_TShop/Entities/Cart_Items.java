@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cart")
+@Table(name = "cart_items")
 public class Cart_Items {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +34,12 @@ public class Cart_Items {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public Cart_Items(int quantity, Cart cart, Product product) {
+        this.quantity = quantity;
+        this.cart = cart;
+        this.product = product;
+        this.created_at = new Date();
+    }
+    
 }
