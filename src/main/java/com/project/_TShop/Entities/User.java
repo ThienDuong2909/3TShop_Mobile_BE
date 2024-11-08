@@ -40,6 +40,6 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "account_id", nullable = false)
-    private Account account_id;
+    private Account account;
 
 }
