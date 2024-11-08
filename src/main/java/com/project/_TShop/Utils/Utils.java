@@ -73,6 +73,7 @@ public class Utils {
         productDTO.setCreate_at(product.getCreated_at());
         productDTO.setDescriptipn(product.getDescription());
         productDTO.setName(product.getName());
+        productDTO.setImage(product.getImage());
         productDTO.setPrice(product.getPrice());
         productDTO.setProduct_id(product.getProduct_id());
         productDTO.setSold(product.getSold());
