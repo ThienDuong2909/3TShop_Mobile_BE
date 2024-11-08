@@ -11,6 +11,7 @@ public class ProductDTO {
     private String name;
     private BigDecimal price;
     private String description;
+    private String image;
     private int sold;
     private Boolean which_gender;
     private Date create_at;

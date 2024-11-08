@@ -34,4 +34,12 @@ public class Cart_Items {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public Cart_Items(int quantity, Cart cart, Product product) {
+        this.quantity = quantity;
+        this.cart = cart;
+        this.product = product;
+        this.created_at = new Date();
+    }
+    
 }

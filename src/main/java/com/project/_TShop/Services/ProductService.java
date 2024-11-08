@@ -44,7 +44,6 @@ public class ProductService {
         Response response = new Response();
         try {
             List<Product> products = productRepo.findTop10ByOrderBySoldDesc();
-            System.out.print(products);
             response.setStatus(200);
             response.setMessage("Get hot products success");
             response.setProductDTOList(Utils.mapProducts(products));

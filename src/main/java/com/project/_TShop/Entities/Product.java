@@ -27,6 +27,9 @@ public class Product {
     @Column(name="description",columnDefinition = "nvarchar(255)",nullable = false)
     private String description;
 
+    @Column(name="image",columnDefinition = "LONGTEXT",nullable = true)
+    private String image;
+
     @Column(name = "price", precision = 12, scale = 0)
     private BigDecimal price;
 
