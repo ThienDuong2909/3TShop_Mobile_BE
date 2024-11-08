@@ -19,6 +19,6 @@ public class Cart {
     private Integer cart_id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 }

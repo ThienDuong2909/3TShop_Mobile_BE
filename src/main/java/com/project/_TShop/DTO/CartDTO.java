@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class CartDTO {
     private Integer cart_id;
-    private UserDTO userDTO;
+    private AccountDTO accountDTO;
 }

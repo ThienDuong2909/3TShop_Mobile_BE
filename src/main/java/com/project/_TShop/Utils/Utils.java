@@ -140,7 +140,7 @@ public class Utils {
     public static CartDTO mapCart(Cart cart){
         CartDTO cartDTO = new CartDTO();
         cartDTO.setCart_id(cart.getCart_id());
-        cartDTO.setUserDTO(mapUser(cart.getUser()));
+        cartDTO.setAccountDTO(mapAccount(cart.getAccount()));
         return cartDTO;
     }
 

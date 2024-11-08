@@ -61,7 +61,7 @@ public class ColorService {
     public Response updateColor(ColorDTO colorDTO) {
         Response response = new Response();
         try{
-            Color color = colorRepo.findByColor_id(colorDTO.getColor_id());
+            Color color = colorRepo.findByColorId(colorDTO.getColor_id());
             color.setName(colorDTO.getName());
             color.setHex(colorDTO.getHex());
             colorRepo.save(color);
@@ -77,7 +77,7 @@ public class ColorService {
     public Response deleteColor(String colorId) {
         Response response = new Response();
         try{
-            colorRepo.delete(colorRepo.findByColor_id(Integer.parseInt(colorId)));
+            colorRepo.delete(colorRepo.findByColorId(Integer.parseInt(colorId)));
             response.setStatus(200);
             response.setMessage("message: delete color success");
         }catch (Exception e){
