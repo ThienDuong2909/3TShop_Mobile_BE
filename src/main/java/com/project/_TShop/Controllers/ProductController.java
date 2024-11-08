@@ -1,10 +1,9 @@
 package com.project._TShop.Controllers;
 
+import com.project._TShop.DTO.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.ProductService;
@@ -29,6 +28,13 @@ public class ProductController {
     @GetMapping("get-new-products")
     public ResponseEntity<Response> getNewProduct(){
         Response response = productService.getNewProducts();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PostMapping("add-product")
+    public ResponseEntity<Response> addNewProduct(
+            @RequestBody ProductDTO productDTO
+            ){
+        Response response = productService.addProduct(productDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

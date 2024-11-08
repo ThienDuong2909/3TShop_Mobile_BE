@@ -24,7 +24,7 @@ public class Product {
     @Column(name="name",columnDefinition = "varchar(65)",nullable = false)
     private String name;
 
-    @Column(name="description",columnDefinition = "varchar(10)",nullable = false)
+    @Column(name="description",columnDefinition = "nvarchar(255)",nullable = false)
     private String description;
 
     @Column(name = "price", precision = 12, scale = 0)
@@ -34,14 +34,14 @@ public class Product {
     private int sold;
 
     @Column(name="which_gender",columnDefinition = "BIT",nullable = false)
-    private String which_gender;
+    private Boolean  which_gender;
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;
 
     @Column(name="status",columnDefinition = "int",nullable = false)
-    private String status;
+    private int status;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
