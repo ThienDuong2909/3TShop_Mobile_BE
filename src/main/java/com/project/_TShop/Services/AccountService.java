@@ -2,6 +2,7 @@ package com.project._TShop.Services;
 
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Entities.Auth_Provider;
+import com.project._TShop.Entities.Cart;
 import com.project._TShop.Entities.Role;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.RoleRepository;
@@ -28,6 +29,8 @@ public class AccountService {
         Optional<Account> accountOptional = accountRepo.findByRegistrationToken(code);
         if(accountOptional.isPresent()){
             accountOptional.get().setStatus(true);
+//            var cart = Cart.builder()
+//                            .user()
             accountRepo.save(accountOptional.get());
             response.setStatus(200);
             response.setMessage("Verify Account success");

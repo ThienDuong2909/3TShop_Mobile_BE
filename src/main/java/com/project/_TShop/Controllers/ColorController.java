@@ -38,9 +38,9 @@ public class ColorController {
         Response response = colorService.updateColor(colorDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-    @DeleteMapping("/delete-color")
+    @DeleteMapping("/delete-color/{colorId}")
     public ResponseEntity<?> deleteColor(
-            String colorId
+            @PathVariable String colorId
     ){
         Response response = colorService.deleteColor(colorId);
         return ResponseEntity.status(response.getStatus()).body(response);

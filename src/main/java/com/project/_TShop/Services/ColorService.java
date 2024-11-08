@@ -43,13 +43,19 @@ public class ColorService {
     public Response addColor(ColorDTO colorDTO) {
         Response response = new Response();
        try{
-           var color = Color.builder()
-                   .name(colorDTO.getName())
-                   .hex(colorDTO.getHex())
-                   .build();
-           colorRepo.save(color);
-           response.setStatus(200);
-           response.setMessage("message: Add new color success");
+           if(colorRepo.existsByHex(colorDTO.getHex())){
+               response.setStatus(409);
+               response.setMessage("message: Color code already exists");
+               return response;
+           }
+               var color = Color.builder()
+                       .name(colorDTO.getName())
+                       .hex(colorDTO.getHex())
+                       .build();
+               colorRepo.save(color);
+               response.setStatus(200);
+               response.setMessage("message: Add new color success");
+
        }catch (Exception e){
            response.setStatus(500);
            response.setMessage("Error: Could not add new color. " + e.getMessage());
