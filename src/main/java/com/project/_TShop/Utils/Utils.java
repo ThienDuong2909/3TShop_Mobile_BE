@@ -36,7 +36,7 @@ import com.project._TShop.Entities.User;
 public class Utils {
     public static UserDTO mapUser(User user){
         UserDTO userDTO = new UserDTO();
-        userDTO.setAccountDTO(mapAccount(user.getAccount_id()));
+        userDTO.setAccountDTO(mapAccount(user.getAccount()));
         userDTO.setDate_of_birth(user.getDate_of_birth());
         userDTO.setEmail(user.getEmail());
         userDTO.setF_name(user.getF_name());
