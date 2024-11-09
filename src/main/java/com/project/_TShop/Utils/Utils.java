@@ -195,4 +195,7 @@ public class Utils {
     public static List<CategoryDTO> mapCategories(List<Category> categories){
         return categories.stream().map(Utils::mapCategory).collect(Collectors.toList());
     }
+    public static List<Cart_ItemsDTO> mapCartItems(List<Cart_Items> cart_Items){
+        return cart_Items.stream().map(Utils::mapCart_Items).collect(Collectors.toList());
+    }
 }
