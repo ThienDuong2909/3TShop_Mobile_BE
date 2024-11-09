@@ -1,8 +1,13 @@
 package com.project._TShop.Services;
 
 
+import com.project._TShop.Entities.Account;
+import com.project._TShop.Entities.Cart;
+import com.project._TShop.Entities.Cart_Items;
 import com.project._TShop.Entities.User;
 import com.project._TShop.Repositories.AccountRepository;
+import com.project._TShop.Repositories.CartItemsRepository;
+import com.project._TShop.Repositories.CartRepository;
 import com.project._TShop.Repositories.UserRepository;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
@@ -12,13 +17,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
     private final UserRepository userRepo;
-    private final AccountRepository accountRepo;
+    private final AccountRepository accountRepository;
+    private final CartItemsRepository cartItemsRepository;
+    private final CartRepository cartRepository;
 
 
 //    public Optional<User> getCurrentUser() {
@@ -42,5 +50,31 @@ public class CartService {
 //        }
 //        return response;
 //    }
+
+    public Response getByUsername(String username){
+        Response response = new Response();
+        try {
+            Optional<Account> account = accountRepository.findByUsername(username);
+            if(account.isPresent()){
+                Optional<Cart> cart = cartRepository.findByAccount(account.get());
+                if(cart.isPresent()){
+                    List<Cart_Items> cart_Items = cartItemsRepository.findByCart(cart.get());
+                    response.setStatus(200);
+                    response.setMessage("Get cart success");
+                    response.setCart_ItemsDTOList(Utils.mapCartItems(cart_Items));
+                }else{
+                    response.setStatus(202);
+                    response.setMessage("Get cart error");
+                }
+            }else{
+                response.setStatus(201);
+                response.setMessage("Not found account");
+            }
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Eror server");
+        }
+        return response;
+    }
 }
 
