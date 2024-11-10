@@ -41,8 +41,8 @@ public class CartItemsService {
             if(account.isPresent()){
                 Optional<Cart> cart = cartRepository.findByAccount(account.get());
                 if(cart.isPresent()){
-                    Cart_Items cart_Items = new Cart_Items(1, cart.get(), product.get());
-                    cartItemsRepository.save(cart_Items);
+                    // Cart_Items cart_Items = new Cart_Items(1, cart.get(), product.get());
+                    // cartItemsRepository.save(cart_Items);
                     response.setStatus(200);
                     response.setMessage("success add cart");
                 }

@@ -149,7 +149,7 @@ public class Utils {
         cart_ItemsDTO.setCard_item_id(cart_Items.getCart_items_id());
         cart_ItemsDTO.setCartDTO(mapCart(cart_Items.getCart()));
         cart_ItemsDTO.setCreate_at(cart_Items.getCreated_at());
-        cart_ItemsDTO.setProductDTO(mapProduct(cart_Items.getProduct()));
+        cart_ItemsDTO.setSpecificationsDTO(mapSpecifications(cart_Items.getSpecifications()));
         cart_ItemsDTO.setQuantity(cart_Items.getQuantity());
         return cart_ItemsDTO;
     }
@@ -197,5 +197,8 @@ public class Utils {
     }
     public static List<Cart_ItemsDTO> mapCartItems(List<Cart_Items> cart_Items){
         return cart_Items.stream().map(Utils::mapCart_Items).collect(Collectors.toList());
+    }
+    public static List<SpecificationsDTO> mapSpecificationss(List<Specifications> specifications){
+        return specifications.stream().map(Utils::mapSpecifications).collect(Collectors.toList());
     }
 }

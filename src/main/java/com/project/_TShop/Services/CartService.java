@@ -51,30 +51,31 @@ public class CartService {
 //        return response;
 //    }
 
-    public Response getByUsername(String username){
+    public Response getByUsername(String username) {
         Response response = new Response();
         try {
-            Optional<Account> account = accountRepository.findByUsername(username);
-            if(account.isPresent()){
-                Optional<Cart> cart = cartRepository.findByAccount(account.get());
-                if(cart.isPresent()){
-                    List<Cart_Items> cart_Items = cartItemsRepository.findByCart(cart.get());
-                    response.setStatus(200);
-                    response.setMessage("Get cart success");
-                    response.setCart_ItemsDTOList(Utils.mapCartItems(cart_Items));
-                }else{
-                    response.setStatus(202);
-                    response.setMessage("Get cart error");
-                }
-            }else{
+            Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+            Cart cart = cartRepository.findByAccount(account)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+            List<Cart_Items> cartItems = cartItemsRepository.findByCart(cart);
+            response.setStatus(200);
+            response.setMessage("Get cart success");
+            response.setCart_ItemsDTOList(Utils.mapCartItems(cartItems));
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Account not found")) {
                 response.setStatus(201);
                 response.setMessage("Not found account");
+            } else if (e.getMessage().equals("Cart not found")) {
+                response.setStatus(202);
+                response.setMessage("Get cart error");
             }
         } catch (Exception e) {
             response.setStatus(500);
-            response.setMessage("Eror server");
+            response.setMessage("Server error");
         }
         return response;
     }
+
 }
 

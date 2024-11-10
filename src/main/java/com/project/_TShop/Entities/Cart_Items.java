@@ -32,13 +32,13 @@ public class Cart_Items {
     private Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "specifications_id")
+    private Specifications specifications;
 
-    public Cart_Items(int quantity, Cart cart, Product product) {
+    public Cart_Items(int quantity, Cart cart, Specifications specifications) {
         this.quantity = quantity;
         this.cart = cart;
-        this.product = product;
+        this.specifications = specifications;
         this.created_at = new Date();
     }
     

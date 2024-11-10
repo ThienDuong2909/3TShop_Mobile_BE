@@ -10,5 +10,5 @@ public class Cart_ItemsDTO {
     private int quantity;
     private Date create_at;
     private CartDTO cartDTO;
-    private ProductDTO productDTO;
+    private SpecificationsDTO specificationsDTO;
 }

@@ -20,4 +20,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT * FROM Product WHERE category_id = ?1", nativeQuery = true)
     List<Product> findByCategory(Integer id);
 
+    @Query("""
+           SELECT DISTINCT p 
+           FROM Product p
+           JOIN Specifications s ON p.product_id = s.product.product_id
+           WHERE p.status = 1
+           AND s.quantity > 0
+           """)
+    List<Product> findAvailableProducts();
+
 }
