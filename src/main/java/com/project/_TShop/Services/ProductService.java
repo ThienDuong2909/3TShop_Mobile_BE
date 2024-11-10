@@ -1,5 +1,6 @@
 package com.project._TShop.Services;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,21 @@ public class ProductService {
         Response response = new Response();
         try {
             List<Product> products = productRepository.findAll();
+            response.setStatus(200);
+            response.setMessage("Get all product success");
+            response.setProductDTOList(Utils.mapProducts(products));
+        } catch (Exception e) {
+            System.out.println(e);
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response getAvailableProduct(){
+        Response response = new Response();
+        try {
+            List<Product> products = productRepository.findAvailableProducts();
             response.setStatus(200);
             response.setMessage("Get all product success");
             response.setProductDTOList(Utils.mapProducts(products));
@@ -90,36 +106,43 @@ public class ProductService {
         return response;
     }
 
-    public Response getHotProducts(){
+    public Response getHotProducts() {
         Response response = new Response();
         try {
-            List<Product> products = productRepository.findTop10ByOrderBySoldDesc();
+            List<Product> products = productRepository.findAvailableProducts();
+            products.sort(Comparator.comparingInt(Product::getSold).reversed());
+            List<Product> top10Products = products.stream().limit(10).toList();
             response.setStatus(200);
             response.setMessage("Get hot products success");
-            response.setProductDTOList(Utils.mapProducts(products));
+            response.setProductDTOList(Utils.mapProducts(top10Products));
         } catch (Exception e) {
-            System.out.println("Lỗi" + e.toString());
+            System.out.println("Lỗi: " + e.getMessage());
             response.setStatus(500);
             response.setMessage("Server error");
         }
         return response;
     }
-    public Response getNewProducts(){
+
+    public Response getNewProducts() {
         Response response = new Response();
         try {
-            List<Product> products = productRepository.findTop10ByCreatedAtDescNative();
+            List<Product> products = productRepository.findAvailableProducts();
+            products.sort(Comparator.comparing(Product::getCreated_at).reversed());
+            List<Product> top10NewProducts = products.stream().limit(10).toList();
             response.setStatus(200);
             response.setMessage("Get new products success");
-            response.setProductDTOList(Utils.mapProducts(products));
+            response.setProductDTOList(Utils.mapProducts(top10NewProducts));
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Lỗi: " + e.getMessage());
             response.setStatus(500);
             response.setMessage("Server error");
         }
         return response;
+
     }
 @Transactional
     public Response addProduct(ProductWithSpecificationsRequest request) {
+
         Response response = new Response();
         try {
             ProductDTO productDTO = request.getProductDTO();

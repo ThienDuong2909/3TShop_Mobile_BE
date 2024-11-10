@@ -22,9 +22,20 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT * FROM Product WHERE category_id = ?1", nativeQuery = true)
     List<Product> findByCategory(Integer id);
 
+
     @Query("SELECT p FROM Product p WHERE p.product_id = :product_id")
     Optional<Product> findByProductId(Integer product_id);
     @Query(value = "SELECT * FROM product WHERE name COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', :productName, '%')", nativeQuery = true)
     Optional<List<Product>> findByNameContaining(@Param("productName") String productName);
+
+    @Query("""
+           SELECT DISTINCT p 
+           FROM Product p
+           JOIN Specifications s ON p.product_id = s.product.product_id
+           WHERE p.status = 1
+           AND s.quantity > 0
+           """)
+    List<Product> findAvailableProducts();
+
 
 }

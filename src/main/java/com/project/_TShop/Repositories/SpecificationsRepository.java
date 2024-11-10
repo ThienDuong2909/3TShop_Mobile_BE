@@ -1,5 +1,6 @@
 package com.project._TShop.Repositories;
 
+
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Entities.Size;
 import com.project._TShop.Entities.Specifications;
@@ -20,4 +21,6 @@ public interface SpecificationsRepository extends JpaRepository<Specifications, 
 
     @Query("SELECT s FROM Specifications s WHERE s.specifications_id = :specifications_id")
     Optional<Specifications> findBySpecificationsId(Integer specifications_id);
+    List<Specifications> findByProduct(Product product);
+
 }

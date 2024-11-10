@@ -1,5 +1,6 @@
 package com.project._TShop.Controllers;
 
+
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.DTO.SpecificationsDTO;
 import com.project._TShop.Request.ProductWithSpecificationsRequest;
@@ -16,7 +17,13 @@ public class SpecificationsController {
 
     @Autowired
     SpecificationsService specificationsService;
+  
+    @GetMapping("/get-by-product/{id}")
+    public ResponseEntity<Response> getByProduct(@PathVariable("id") int productId){
+        Response response = specificationsService.getByProduct(productId);
 
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
     @GetMapping("get-all")
     public ResponseEntity<Response> getAll(
             @RequestBody ProductDTO productDTO
@@ -48,6 +55,5 @@ public class SpecificationsController {
             @RequestBody SpecificationsDTO specificationsDTO
     ){
         Response response = specificationsService.updateSpecifications(specificationsDTO);
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+
 }

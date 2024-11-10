@@ -96,7 +96,13 @@ public class ProductController {
     public ResponseEntity<Response> getByCategory(
             @PathVariable("id") Integer id
             ){
-        Response response = productService.getById(id);
+        Response response = productService.getByCategory(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/get-available-product")
+    public ResponseEntity<Response> getAvailable(){
+        Response response = productService.getAvailableProduct();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @GetMapping("search")

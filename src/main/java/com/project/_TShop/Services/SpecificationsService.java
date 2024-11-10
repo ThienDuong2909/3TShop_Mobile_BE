@@ -1,5 +1,6 @@
 package com.project._TShop.Services;
 
+
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.DTO.SpecificationsDTO;
 import com.project._TShop.Entities.*;
@@ -33,7 +34,26 @@ public class SpecificationsService {
     SizeRepository sizeRepository;
     @Autowired
     SpecificationsRepository specRepo;
+    
+   public Response getByProduct(Integer productId){
+        Response response = new Response();
+        try {
+            Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new RuntimeException("Not found product"));
+            List<Specifications> specifications = specRepo.findByProduct(product);
+            response.setStatus(200);
+            response.setMessage("Get success");
+            response.setSpecificationsDTOList(Utils.mapSpecificationss(specifications));
+        }catch (RuntimeException e){
+            response.setStatus(201);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Error server");
 
+        }
+        return response;
+    }
 
     public Response getAll(ProductDTO productDTO){
         Response response = new Response();
@@ -99,7 +119,4 @@ public class SpecificationsService {
         }catch (Exception e){
             response.setStatus(500);
             response.setMessage(e.getMessage());
-        }
-        return response;
-    }
 }
