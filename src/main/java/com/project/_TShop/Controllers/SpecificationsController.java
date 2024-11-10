@@ -53,7 +53,9 @@ public class SpecificationsController {
     @PutMapping("update")
     public ResponseEntity<Response> update(
             @RequestBody SpecificationsDTO specificationsDTO
-    ){
+    ) {
         Response response = specificationsService.updateSpecifications(specificationsDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 
 }
