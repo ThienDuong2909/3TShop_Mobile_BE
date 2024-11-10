@@ -1,31 +1,59 @@
 package com.project._TShop.Controllers;
 
-import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.project._TShop.Entities.Specifications;
-import com.project._TShop.Repositories.SpecificationsRepository;
+import com.project._TShop.DTO.ProductDTO;
+import com.project._TShop.DTO.SpecificationsDTO;
+import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import com.project._TShop.Response.Response;
+import com.project._TShop.Services.ProductService;
 import com.project._TShop.Services.SpecificationsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-
-@RestController
+@RestController()
 @RequestMapping("/specifications")
-@RequiredArgsConstructor
-
 public class SpecificationsController {
-    private final SpecificationsService specificationsService;
 
+    @Autowired
+    SpecificationsService specificationsService;
+  
     @GetMapping("/get-by-product/{id}")
     public ResponseEntity<Response> getByProduct(@PathVariable("id") int productId){
         Response response = specificationsService.getByProduct(productId);
+
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @GetMapping("get-all")
+    public ResponseEntity<Response> getAll(
+            @RequestBody ProductDTO productDTO
+    ){
+        Response response = specificationsService.getAll(productDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+//    {
+//        "specifications_id": 14,
+//            "status": 0
+//    }
+    @PutMapping("change-status")
+    public ResponseEntity<Response> changeStatus(
+            @RequestBody SpecificationsDTO specificationsDTO
+    ){
+        Response response = specificationsService.changeStatusOfSpecifications(specificationsDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+//    {
+//        "specifications_id": 14,
+//            "colorDTO":{
+//        "color_id":2
+//    },
+//        "quantity":20
+//    }
+    @PutMapping("update")
+    public ResponseEntity<Response> update(
+            @RequestBody SpecificationsDTO specificationsDTO
+    ){
+        Response response = specificationsService.updateSpecifications(specificationsDTO);
+
 }

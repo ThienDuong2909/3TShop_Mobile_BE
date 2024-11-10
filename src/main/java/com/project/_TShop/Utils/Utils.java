@@ -160,6 +160,7 @@ public class Utils {
         specificationsDTO.setProductDTO(mapProduct(specifications.getProduct()));
         specificationsDTO.setQuantity(specifications.getQuantity());
         specificationsDTO.setSizeDTO(mapSize(specifications.getSize_id()));
+        specificationsDTO.setStatus(specifications.getStatus());
         specificationsDTO.setSpecifications_id(specifications.getSpecifications_id());
         return specificationsDTO;
 
