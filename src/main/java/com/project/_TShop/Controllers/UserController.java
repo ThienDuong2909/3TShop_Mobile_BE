@@ -29,10 +29,7 @@ public class UserController {
 
     @GetMapping("/get-user-info")
     public ResponseEntity<?> getUserInfo(){
-        System.out.print("Lấy thông tin");
         Response response = userService.getUserInfo();
-        System.out.print("Lấy thông tin: " + response);
-        System.out.print("Lấy thông tin: " + ResponseEntity.status(response.getStatus()).body(response));
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface SizeRepository extends JpaRepository<Size, Integer> {
     @Query("SELECT s FROM Size s WHERE s.size_id = :size_id")
     Optional<Size> findBySizeId(@Param("size_id") int size_id);
-
 }

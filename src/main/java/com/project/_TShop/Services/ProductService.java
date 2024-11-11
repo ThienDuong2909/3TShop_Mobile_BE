@@ -85,26 +85,26 @@ public class ProductService {
         return response;
     }
 
-    public Response getByCategory(Integer id){
-        Response response = new Response();
-        try {
-            Optional<Category> category = categoryRepository.findById(id);
-            if(category.isPresent()){
-                List<Product> products = productRepository.findByCategory(category.get().getCategory_id());
-                response.setStatus(200);
-                response.setMessage("Get products success");
-                response.setProductDTOList(Utils.mapProducts(products));
-            }else{
-                response.setStatus(202);
-                response.setMessage("Not found categorys");
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-            response.setStatus(500);
-            response.setMessage("Server error");
-        }
-        return response;
-    }
+    // public Response getByCategory(Integer id){
+    //     Response response = new Response();
+    //     try {
+    //         Optional<Category> category = categoryRepository.findById(id);
+    //         if(category.isPresent()){
+    //             List<Product> products = productRepository.findByCategory(category.get().getCategory_id());
+    //             response.setStatus(200);
+    //             response.setMessage("Get products success");
+    //             response.setProductDTOList(Utils.mapProducts(products));
+    //         }else{
+    //             response.setStatus(202);
+    //             response.setMessage("Not found categorys");
+    //         }
+    //     } catch (Exception e) {
+    //         System.out.println(e);
+    //         response.setStatus(500);
+    //         response.setMessage("Server error");
+    //     }
+    //     return response;
+    // }
 
     public Response getHotProducts() {
         Response response = new Response();
@@ -122,6 +122,30 @@ public class ProductService {
         }
         return response;
     }
+
+    public Response getByCategory(Integer idCategory) {
+        Response response = new Response();
+        try {
+            Category category = categoryRepository.findById(idCategory)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+            List<Product> products = productRepository.findAvailableProducts();
+            List<Product> filteredProducts = products.stream()
+                .filter(product -> product.getCategory_id().equals(category)) 
+                .limit(10) 
+                .toList();
+            response.setStatus(200);
+            response.setMessage("Get products by category success");
+            response.setProductDTOList(Utils.mapProducts(filteredProducts));
+        } catch (RuntimeException e) {
+            response.setStatus(202);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Lỗi: " + e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }    
 
     public Response getNewProducts() {
         Response response = new Response();
