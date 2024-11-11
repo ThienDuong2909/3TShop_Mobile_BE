@@ -1,4 +1,5 @@
 package com.project._TShop.Repositories;
+
 import com.project._TShop.Entities.Color;
 import com.project._TShop.Entities.Size;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -11,6 +11,7 @@ import com.project._TShop.Entities.Color;
 import com.project._TShop.Entities.Product;
 import com.project._TShop.Entities.Size;
 import com.project._TShop.Entities.Specifications;
+import com.project._TShop.Entities.Account;
 import org.springframework.stereotype.Repository;
 
 
