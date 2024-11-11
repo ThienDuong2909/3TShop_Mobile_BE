@@ -43,7 +43,9 @@ function checkPasswordsMatch() {
   const confirmPasswordInput = document.getElementById(
     "confirm__password__input"
   );
-  const statusMessage = document.getElementById("password_match_status");
+  const statusMessage = document.getElementById(
+    "confirm__password__match__status"
+  );
 
   if (passwordInput.value && confirmPasswordInput.value) {
     if (passwordInput.value === confirmPasswordInput.value) {
@@ -56,3 +58,117 @@ function checkPasswordsMatch() {
     statusMessage.style.display = "none";
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("register__btn").onclick = function (event) {
+    console.log("click");
+    event.preventDefault();
+
+    const username = document.getElementById("username__input").value.trim();
+    const email = document.getElementById("email__input").value.trim();
+    const password = document.getElementById("password__input").value;
+    const confirmPassword = document.getElementById(
+      "confirm__password__input"
+    ).value;
+    console.log(username, email, password, confirmPassword);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const specialCharRegex = /[^a-zA-Z0-9_]/;
+
+    if (username.length < 8) {
+      document.getElementById("username__status").style.display = "block";
+      document.getElementById("username__status").innerText =
+        "Username tối thiểu 8 kí tự";
+      return;
+    } else {
+      document.getElementById("username__status").style.display = "nonee";
+    }
+    if (username.length > 65) {
+      document.getElementById("username__status").style.display = "block";
+      document.getElementById("username__status").innerText =
+        "Username tối đa 65 kí tự";
+      return;
+    } else {
+      document.getElementById("username__status").style.display = "nonee";
+    }
+
+    if (specialCharRegex.test(username)) {
+      document.getElementById("username__status").style.display = "block";
+      document.getElementById("username__status").innerText =
+        "Username không được chứa kí tự đặt biệt";
+      return;
+    } else {
+      document.getElementById("username__status").style.display = "nonee";
+    }
+
+    if (!emailRegex.test(email)) {
+      document.getElementById("email__status").style.display = "block";
+      document.getElementById("email__status").innerText =
+        "Email không đúng định dạng";
+      return;
+    } else {
+      document.getElementById("email__status").style.display = "nonee";
+    }
+
+    if (password.length < 8) {
+      document.getElementById("password__status").style.display = "block";
+      document.getElementById("password__status").innerText =
+        "Mật khẩu tối thiểu 8 ký tự.";
+      return;
+    } else {
+      document.getElementById("password__status").style.display = "nonee";
+    }
+
+    if (password.length > 65) {
+      document.getElementById("password__status").style.display = "block";
+
+      document.getElementById("password__status").innerText =
+        "Mật khẩu tối đa 65 ký tự.";
+      return;
+    } else {
+      document.getElementById("password__status").style.display = "nonee";
+    }
+
+    if (password !== confirmPassword) {
+      document.getElementById(
+        "confirm__password__match__status"
+      ).style.display = "block";
+      document.getElementById("confirm__password__match__status").innerText =
+        "Mật khẩu không khớp";
+      return;
+    } else {
+      document.getElementById(
+        "confirm__password__match__status"
+      ).style.display = "nonee";
+    }
+
+    const userData = {
+      username: username,
+      password: password,
+      email: email,
+    };
+    console.log(userData);
+    fetch("http://localhost:8080/api/v1/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    }).then((response) => {
+      console.log(response);
+      // if (response.) {
+      //   return response.json();
+      // } else {
+      //   throw new Error("Đăng ký thất bại");
+      // }
+    });
+    // .then(data => {
+    //   alert("Đăng ký thành công!");
+    //   console.log(data);
+
+    // })
+    // .catch(error => {
+    //   console.error(error);
+    //   alert(error.message);
+    // });
+  };
+});

@@ -33,14 +33,14 @@ public class SpecificationsService {
     @Autowired
     SizeRepository sizeRepository;
     @Autowired
-    SpecificationsRepository specRepo;
+    SpecificationsRepository specificationsRepository;
     
    public Response getByProduct(Integer productId){
         Response response = new Response();
         try {
             Product product = productRepository.findById(productId)
                 .orElseThrow(()-> new RuntimeException("Not found product"));
-            List<Specifications> specifications = specRepo.findByProduct(product);
+            List<Specifications> specifications = specificationsRepository.findByProduct(product);
             response.setStatus(200);
             response.setMessage("Get success");
             response.setSpecificationsDTOList(Utils.mapSpecificationss(specifications));
@@ -59,7 +59,7 @@ public class SpecificationsService {
         Response response = new Response();
         try {
             System.out.println("product_id: "+productDTO.getProduct_id());
-            List<Specifications> specifications = specRepo.findAllByProductId(productDTO.getProduct_id())
+            List<Specifications> specifications = specificationsRepository.findAllByProductId(productDTO.getProduct_id())
                     .orElseThrow(()-> new ResourceNotFoundException("Specifications", "ProductId",productDTO.getProduct_id()));
             System.out.println("Specifications found: " + specifications.size());
             List<SpecificationsDTO> specificationsDTOList = specifications.stream()
@@ -83,10 +83,10 @@ public class SpecificationsService {
         Response response = new Response();
         try{
             System.out.println("specificationsDTO :"+ specificationsDTO.getSpecifications_id());
-            Specifications specifications = specRepo.findBySpecificationsId(specificationsDTO.getSpecifications_id())
+            Specifications specifications = specificationsRepository.findBySpecificationsId(specificationsDTO.getSpecifications_id())
                     .orElseThrow(()-> new ResourceNotFoundException("Specifications", "Id", specificationsDTO.getSpecifications_id()));
             specifications.setStatus(specificationsDTO.getStatus());
-            specRepo.save(specifications);
+            specificationsRepository.save(specifications);
             response.setStatus(200);
             response.setMessage("Change status specification success");
         }catch (ResourceNotFoundException e){
@@ -101,22 +101,22 @@ public class SpecificationsService {
 
     public Response updateSpecifications(SpecificationsDTO specificationsDTO) {
         Response response = new Response();
-        System.out.println("specificationsDTO :"+ specificationsDTO.getColorDTO().getColor_id());
+        System.out.println("specificationsDTO :" + specificationsDTO.getColorDTO().getColor_id());
 
-        try{
-            Specifications specifications = specRepo.findBySpecificationsId(specificationsDTO.getSpecifications_id())
-                    .orElseThrow(()-> new ResourceNotFoundException("Specifications", "Id", specificationsDTO.getSpecifications_id()));
+        try {
+            Specifications specifications = specificationsRepository.findBySpecificationsId(specificationsDTO.getSpecifications_id())
+                    .orElseThrow(() -> new ResourceNotFoundException("Specifications", "Id", specificationsDTO.getSpecifications_id()));
             Color color = colorRepository.findByColorId(specificationsDTO.getColorDTO().getColor_id())
-                    .orElseThrow(()-> new ResourceNotFoundException("Color", "ID", specificationsDTO.getColorDTO().getColor_id()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Color", "ID", specificationsDTO.getColorDTO().getColor_id()));
             specifications.setColor(color);
             specifications.setQuantity(specificationsDTO.getQuantity());
-            specRepo.save(specifications);
+            specificationsRepository.save(specifications);
             response.setStatus(200);
             response.setMessage("Update specification success");
-        }catch (ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             response.setStatus(201);
             response.setMessage(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setStatus(500);
             response.setMessage(e.getMessage());
         }
