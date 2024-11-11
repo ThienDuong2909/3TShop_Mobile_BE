@@ -1,7 +1,9 @@
 package com.project._TShop.Controllers;
 
 import com.project._TShop.DTO.ProductDTO;
+import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +32,55 @@ public class ProductController {
         Response response = productService.getNewProducts();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+//    {
+//        "productDTO": {
+//        "name": "Áo thun tay ngắn",
+//                "description": "Áo thun tay ngắn, mặc thoáng mát cho mùa hè nóng bức.",
+//                "price": 200000,
+//                "sold": 3,
+//                "which_gender": true,
+//                "categoryDTO": {
+//            "category_id": 1
+//        }
+//    },
+//        "specificationsDTO": [
+//        {
+//            "quantity": 2,
+//                "colorDTO": {
+//            "color_id": 1
+//        },
+//            "sizeDTO": {
+//            "size_id": 1
+//        }
+//        },
+//        {
+//            "quantity": 5,
+//                "colorDTO": {
+//            "color_id": 2
+//        },
+//            "sizeDTO": {
+//            "size_id": 2
+//        }
+//        }
+//    ]
+//    }
     @PostMapping("add-product")
     public ResponseEntity<Response> addNewProduct(
-            @RequestBody ProductDTO productDTO
+            @RequestBody ProductWithSpecificationsRequest request
             ){
-        Response response = productService.addProduct(productDTO);
+        Response response = productService.addProduct(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+//    {
+//        "product_id": 12,
+//            "status": 0
+//    }
+    @PutMapping("change-status")
+    public ResponseEntity<Response> changeStatus(
+            @RequestBody ProductDTO productDTO
+    ){
+        Response response = productService.changeStatusOfProduct(productDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -57,6 +103,13 @@ public class ProductController {
     @GetMapping("/get-available-product")
     public ResponseEntity<Response> getAvailable(){
         Response response = productService.getAvailableProduct();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("search")
+    public ResponseEntity<Response> searchProduct(
+            @RequestParam("name") String product_name
+    ){
+        Response response = productService.searchByName(product_name);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 public class SpecificationsDTO {
     private Integer specifications_id;
     private int quantity;
+    private int status;
     private SizeDTO sizeDTO;
     private ColorDTO colorDTO;
     private ProductDTO productDTO;

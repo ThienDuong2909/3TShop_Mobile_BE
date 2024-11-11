@@ -23,6 +23,9 @@ public class Specifications {
     @Column(name="quantity",columnDefinition = "int",nullable = false)
     private int quantity;
 
+    @Column(name="status",columnDefinition = "int",nullable = true)
+    private int status;
+
     @ManyToOne
     @JoinColumn(name = "size_id", nullable = false)
     private Size size_id;
