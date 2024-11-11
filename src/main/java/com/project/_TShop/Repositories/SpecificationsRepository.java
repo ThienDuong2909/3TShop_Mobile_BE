@@ -26,7 +26,7 @@ public interface SpecificationsRepository extends JpaRepository<Specifications, 
     Optional<Specifications> findBySpecificationsId(Integer specifications_id);
     List<Specifications> findByProduct(Product product);
     @Query("SELECT s FROM Specifications s WHERE s.color = :color AND s.size_id = :size AND s.product = :product")
-    Specifications findByColorAndSizeAndProduct(
+    Optional<Specifications> findByColorAndSizeAndProduct(
         @Param("color") Color color,
         @Param("size") Size size,
         @Param("product") Product product

@@ -41,6 +41,7 @@ public class SpecificationsService {
             Product product = productRepository.findById(productId)
                 .orElseThrow(()-> new RuntimeException("Not found product"));
             List<Specifications> specifications = specificationsRepository.findByProduct(product);
+            System.out.println("lấy spec 2" + specifications);
             response.setStatus(200);
             response.setMessage("Get success");
             response.setSpecificationsDTOList(Utils.mapSpecificationss(specifications));
@@ -50,7 +51,6 @@ public class SpecificationsService {
         } catch (Exception e) {
             response.setStatus(500);
             response.setMessage("Error server");
-
         }
         return response;
     }

@@ -1,5 +1,6 @@
 package com.project._TShop.Services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,11 +12,18 @@ import org.springframework.stereotype.Service;
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Entities.Cart;
 import com.project._TShop.Entities.Cart_Items;
+import com.project._TShop.Entities.Color;
 import com.project._TShop.Entities.Product;
+import com.project._TShop.Entities.Size;
+import com.project._TShop.Entities.Specifications;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.CartItemsRepository;
 import com.project._TShop.Repositories.CartRepository;
+import com.project._TShop.Repositories.ColorRepository;
 import com.project._TShop.Repositories.ProductRepository;
+import com.project._TShop.Repositories.SizeRepository;
+import com.project._TShop.Repositories.SpecificationsRepository;
+import com.project._TShop.Request.CartItemRequest;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
 
@@ -28,31 +36,75 @@ public class CartItemsService {
     CartRepository cartRepository;
 
     @Autowired
+    SizeRepository sizeRepository;
+
+    @Autowired
+    ColorRepository colorRepository;
+
+    @Autowired
     AccountRepository accountRepository;
 
     @Autowired
     ProductRepository productRepository;
 
-    public Response addToCart(int id){
+    @Autowired
+    SpecificationsRepository specificationsRepository;
+
+    public Response addToCart(CartItemRequest cartItemRequest) {
         Response response = new Response();
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            Optional <Product> product = productRepository.findById(id);
-            Optional<Account> account = accountRepository.findByUsername(username);
-            if(account.isPresent()){
-                Optional<Cart> cart = cartRepository.findByAccount(account.get());
-                if(cart.isPresent()){
-                    // Cart_Items cart_Items = new Cart_Items(1, cart.get(), product.get());
-                    // cartItemsRepository.save(cart_Items);
-                    response.setStatus(200);
-                    response.setMessage("success add cart");
-                }
+            Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+            Product product = productRepository.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+            Color color = colorRepository.findById(cartItemRequest.getColorId())
+                .orElseThrow(() -> new RuntimeException("Color not found"));
+            Size size = sizeRepository.findById(cartItemRequest.getSizeId())
+                .orElseThrow(() -> new RuntimeException("Size not found"));
+            Specifications specifications = specificationsRepository.findByColorAndSizeAndProduct(color, size, product)
+                .orElseThrow(() -> new RuntimeException("Specifications not found"));
+            Cart cart = cartRepository.findByAccount(account)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setAccount(account);
+                    return cartRepository.save(newCart);
+                });
+            Cart_Items cartItem = cartItemsRepository.findByCartAndSpecifications(cart, specifications)
+                .orElseGet(() -> new Cart_Items(
+                        cartItemRequest.getQuantity(),
+                        cart,
+                        specifications
+                ));
+            if (cartItem.getCart_items_id() != null) {
+                cartItem.setQuantity(cartItem.getQuantity() + cartItemRequest.getQuantity());
             }
+            cartItemsRepository.save(cartItem);
+            response.setStatus(200);
+            response.setMessage("Success add to cart");
+        } catch (RuntimeException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             response.setStatus(500);
-            response.setMessage("Error server");
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response deleteCartItem(Integer id) {
+        Response response = new Response();
+        try {
+            
+        } catch (RuntimeException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Server error");
         }
         return response;
     }

@@ -21,7 +21,7 @@ public class SpecificationsController {
     @GetMapping("/get-by-product/{id}")
     public ResponseEntity<Response> getByProduct(@PathVariable("id") int productId){
         Response response = specificationsService.getByProduct(productId);
-
+        System.out.print("Lấy spec");
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @GetMapping("get-all")
