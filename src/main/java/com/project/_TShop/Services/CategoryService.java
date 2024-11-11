@@ -39,7 +39,7 @@ public class CategoryService {
             if(categoryRepository.findByName(categoryDTO.getName().toUpperCase()).isPresent()){
                 response.setStatus(209);
 
-                response.setMessage("message: Category name had been used");
+                response.setMessage("Category name had been used");
                 return response;
             }
             var category = Category.builder()
@@ -50,7 +50,7 @@ public class CategoryService {
                     .build();
             categoryRepository.save(category);
             response.setStatus(200);
-            response.setMessage("message: Add new category success");
+            response.setMessage("Add new category success");
         } catch (Exception e) {
             System.out.print(e.toString());
             response.setStatus(500);
@@ -64,7 +64,7 @@ public class CategoryService {
         try {
             if(categoryRepository.findByName(categoryDTO.getName().toUpperCase()).isPresent()){
                 response.setStatus(209);
-                response.setMessage("message: Category name had been used");
+                response.setMessage("Category name had been used");
                 return response;
             }
             Optional<Category> category = Optional.ofNullable(categoryRepository.findByCategoryId(categoryDTO.getCategory_id()));
@@ -73,11 +73,25 @@ public class CategoryService {
             category.get().setImage(categoryDTO.getImage());
             categoryRepository.save(category.get());
             response.setStatus(200);
-            response.setMessage("message: update category success");
+            response.setMessage("Update category success");
         } catch (Exception e) {
             System.out.print(e.toString());
             response.setStatus(500);
             response.setMessage("Error server");
+        }
+        return response;
+    }
+
+    public Response deleteCategory(int categoryId) {
+        Response response = new Response();
+        try{
+            Category category = categoryRepository.findByCategoryId(categoryId);
+            categoryRepository.delete(category);
+            response.setStatus(200);
+            response.setMessage("Delete Category success");
+        }catch (Exception e){
+            response.setStatus(201);
+            response.setMessage(e.getMessage());
         }
         return response;
     }
