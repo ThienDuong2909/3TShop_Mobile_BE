@@ -7,5 +7,5 @@ public class Order_DetailDTO {
     private Integer order_detail_id;
     private int quantity;
     private OrderDTO orderDTO;
-    private ProductDTO productDTO;
+    private SpecificationsDTO specificationsDTO;
 }

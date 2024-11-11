@@ -1,5 +1,6 @@
 package com.project._TShop.Services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.project._TShop.Repositories.CartItemsRepository;
 import com.project._TShop.Repositories.CartRepository;
 import com.project._TShop.Repositories.ProductRepository;
 import com.project._TShop.Response.Response;
+import com.project._TShop.Utils.Utils;
 
 @Service
 public class CartItemsService {
@@ -54,4 +56,26 @@ public class CartItemsService {
         }
         return response;
     }
+
+    public Response getByAccount() {
+        Response response = new Response();
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+            Cart cart = cartRepository.findByAccount(account)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+            List<Cart_Items> cartItems = cartItemsRepository.findByCart(cart);
+            response.setStatus(200);
+            response.setCart_ItemsDTOList(Utils.mapCartItems(cartItems));
+            response.setMessage("Success get cart");
+        } catch (RuntimeException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }    
 }

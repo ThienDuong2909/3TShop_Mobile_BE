@@ -25,7 +25,13 @@ public class Order_Detail {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    public Order_Detail(int quantity, Order order, Specifications specifications) {
+        this.quantity = quantity;
+        this.order = order;
+        this.specifications = specifications;
+    }
+
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "specifications_id")
+    private Specifications specifications;
 }
