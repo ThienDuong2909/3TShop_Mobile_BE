@@ -30,7 +30,7 @@
   <body>
     <div class="wrapper">
       <div class="content">
-        <img src="/FrontEnd/img/utils/LOGO_3TSHOP_ADMIN.png" class="logo_img" />
+        <img src="../../img/utils/LOGO_3TSHOP_ADMIN.png" class="logo_img" />
         <h2 class="wellcome__title">ĐĂNG KÝ TÀI KHOẢN</h2>
         <div class="login__form">
           <div class="username__box">
@@ -38,10 +38,13 @@
               >Tên đăng nhập</label
             >
             <input type="text" id="username__input" class="__input" required />
+            <div id="username__status" style="display: none"></div>
           </div>
           <div class="email__box">
             <label class="label_input" for="email__input">Email</label>
             <input type="email" id="email__input" class="__input" required />
+            <div id="email__status" style="display: none"></div>
+
           </div>
           <div class="password__box">
             <label class="label_input" for="password__input">Mật khẩu</label>
@@ -62,6 +65,8 @@
               onclick="togglePassword('password__input', 'password_eye', 'password_eye_slash')"
               style="display: none"
             ></i>
+            <div id="password__status" style="display: none"></div>
+
           </div>
 
           <div class="confirm__password__box">
@@ -85,13 +90,12 @@
               onclick="togglePassword('confirm__password__input', 'confirm_password_eye', 'confirm_password_eye_slash')"
               style="display: none"
             ></i>
-            <div id="password_match_status" style="display: none"></div>
-              Mật khẩu chưa khớp
+            <div id="confirm__password__match__status" style="display: none"></div>
             </div>
           </div>
 
           <div class="action_form">
-            <button id="register__btn" class="btn__register">Đăng Ký</button>
+            <button id="register__btn" class="btn__register" >Đăng Ký</button>
             <a class="a__back__login">Quay về trang đăng nhập</a>
           </div>
         </div>
