@@ -5,9 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project._TShop.Request.CartItemRequest;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.CartItemsService;
 
@@ -19,10 +22,17 @@ public class CartItemsController {
     @Autowired
     CartItemsService cartItemsService;
     
-    @GetMapping("/add/{id}")
+    @PostMapping("/add")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Response> addCartItem(@PathVariable("id") Integer id){
-        Response response = cartItemsService.addToCart(id);
+    public ResponseEntity<Response> addCartItem(@RequestBody CartItemRequest cartItemRequest){
+        Response response = cartItemsService.addToCart(cartItemRequest);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> deleteCartItem(@PathVariable("id") Integer id){
+        Response response = cartItemsService.deleteCartItem(id);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

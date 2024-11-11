@@ -85,15 +85,12 @@ public class OrderService {
                 Size size = sizeRepository.findById(sizeId)
                     .orElseThrow(() -> new RuntimeException("Not found size"));
 
-                Specifications specifications = specificationsRepository.findByColorAndSizeAndProduct(color, size, product);
-                if(specifications == null){
-                    throw new RuntimeException("Not found specifications");
-                } else {
-                    BigDecimal price = specifications.getProduct().getPrice().multiply(BigDecimal.valueOf(quantity));
-                    totalPrice = totalPrice.add(price);
-                    Order_Detail orderDetail = new Order_Detail(quantity, order, specifications);
-                    orderDetailRepository.save(orderDetail);
-                }  
+                Specifications specifications = specificationsRepository.findByColorAndSizeAndProduct(color, size, product)
+                    .orElseThrow(() -> new RuntimeException("Not found specifications")); 
+                BigDecimal price = specifications.getProduct().getPrice().multiply(BigDecimal.valueOf(quantity));
+                totalPrice = totalPrice.add(price);
+                Order_Detail orderDetail = new Order_Detail(quantity, order, specifications);
+                orderDetailRepository.save(orderDetail);
             }
             order.setTotal_price(totalPrice);
             orderRepository.save(order);
@@ -109,7 +106,8 @@ public class OrderService {
                     colorRepository.findById(colorId).get(),
                     sizeRepository.findById(sizeId).get(),
                     productRepository.findById(productId).get()
-                );
+                )
+                    .orElseThrow(()-> new RuntimeException("Not found specificatións"));
 
                 cartItemsRepository.deleteBySpecifications(specifications);
             }

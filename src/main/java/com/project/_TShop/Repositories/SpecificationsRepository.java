@@ -1,6 +1,7 @@
 package com.project._TShop.Repositories;
 
-
+import java.util.List;
+import java.util.Optional;
 import com.project._TShop.Entities.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,10 +12,9 @@ import com.project._TShop.Entities.Color;
 import com.project._TShop.Entities.Product;
 import com.project._TShop.Entities.Size;
 import com.project._TShop.Entities.Specifications;
+import com.project._TShop.Entities.Account;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface SpecificationsRepository extends JpaRepository<Specifications, Integer> {
@@ -26,7 +26,7 @@ public interface SpecificationsRepository extends JpaRepository<Specifications, 
     Optional<Specifications> findBySpecificationsId(Integer specifications_id);
     List<Specifications> findByProduct(Product product);
     @Query("SELECT s FROM Specifications s WHERE s.color = :color AND s.size_id = :size AND s.product = :product")
-    Specifications findByColorAndSizeAndProduct(
+    Optional<Specifications> findByColorAndSizeAndProduct(
         @Param("color") Color color,
         @Param("size") Size size,
         @Param("product") Product product
