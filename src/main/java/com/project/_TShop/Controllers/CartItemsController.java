@@ -19,13 +19,17 @@ public class CartItemsController {
     @Autowired
     CartItemsService cartItemsService;
     
-    @GetMapping("add/{id}")
+    @GetMapping("/add/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Response> addCartItem(@PathVariable("id") Integer id){
         Response response = cartItemsService.addToCart(id);
-        System.out.println("hello");
-        System.out.println("hello");
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("/get-by-account")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getByAccount(){
+        Response response = cartItemsService.getByAccount();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

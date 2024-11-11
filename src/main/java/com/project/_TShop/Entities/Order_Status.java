@@ -32,4 +32,10 @@ public class Order_Status {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order_id;
 
+    public Order_Status(int status, Date created_at, Order order_id) {
+        this.status = status;
+        this.created_at = created_at;
+        this.order_id = order_id;
+    }
+
 }

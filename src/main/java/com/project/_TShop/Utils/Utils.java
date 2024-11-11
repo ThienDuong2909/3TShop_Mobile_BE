@@ -125,7 +125,7 @@ public class Utils {
         Order_DetailDTO order_DetailDTO = new Order_DetailDTO();
         order_DetailDTO.setOrderDTO(mapOrder(order_Detail.getOrder()));
         order_DetailDTO.setOrder_detail_id(order_Detail.getOrder_detail_id());
-        order_DetailDTO.setProductDTO(mapProduct(order_Detail.getProduct()));
+        order_DetailDTO.setSpecificationsDTO(mapSpecifications(order_Detail.getSpecifications()));
         order_DetailDTO.setQuantity(order_Detail.getQuantity());
         return order_DetailDTO;
     }

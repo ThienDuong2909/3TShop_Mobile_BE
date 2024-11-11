@@ -44,4 +44,15 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user_id;
 
+    public Order(String name, String phone, String address_line_1, String address_line_2, BigDecimal total_price,
+            Date date, User user_id) {
+        this.name = name;
+        this.phone = phone;
+        this.address_line_1 = address_line_1;
+        this.address_line_2 = address_line_2;
+        this.total_price = total_price;
+        this.date = date;
+        this.user_id = user_id;
+    }
+
 }
