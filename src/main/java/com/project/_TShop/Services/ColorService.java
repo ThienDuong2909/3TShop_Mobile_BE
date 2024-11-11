@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public class ColorService {
                var color = Color.builder()
                        .name(colorDTO.getName())
                        .hex(colorDTO.getHex())
+                       .createdAt(new Date())
                        .build();
                colorRepo.save(color);
                response.setStatus(200);

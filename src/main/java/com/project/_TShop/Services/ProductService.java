@@ -189,6 +189,7 @@ public class ProductService {
                     .price(productDTO.getPrice())
                     .sold(productDTO.getSold())
                     .which_gender(productDTO.getWhich_gender())
+                    .image(productDTO.getImage())
                     .created_at(new Date())
                     .category_id(category)
                     .status(1)

@@ -32,6 +32,7 @@ public class Response {
     private RoleDTO roleDTO;
     private SizeDTO sizeDTO;
     private SpecificationsDTO specificationsDTO;
+    private OrderResponse orderResponse;
 
     private List<UserDTO> userDTOList;
     private List<AccountDTO> accountDTOList;
@@ -48,4 +49,5 @@ public class Response {
     private List<RoleDTO> roleDTOList;
     private List<SizeDTO> sizeDTOList;
     private List<SpecificationsDTO> specificationsDTOList;
+    private List<OrderResponse> orderResponses;
 }

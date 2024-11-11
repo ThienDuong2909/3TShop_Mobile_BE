@@ -1,9 +1,16 @@
 package com.project._TShop.Services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.project._TShop.DTO.OrderDTO;
+import com.project._TShop.DTO.Order_DetailDTO;
+import com.project._TShop.DTO.Order_StatusDTO;
+import com.project._TShop.Exceptions.ResourceNotFoundException;
+import com.project._TShop.Response.OrderResponse;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Entities.Account;
@@ -117,7 +124,7 @@ public class OrderService {
             response.setStatus(200);
         } catch (RuntimeException e) {
             response.setStatus(202);
-            response.setMessage("Create failed");
+            response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setMessage("Error: " + e.getMessage());
             response.setStatus(500);
@@ -126,4 +133,74 @@ public class OrderService {
         return response;
     }
 
+    public Response getOrders(int status) {
+        Response response = new Response();
+            try{
+                List<Order_Status> orderStatusList = new ArrayList<>();
+                if(status == 0){
+                    orderStatusList = orderStatusRepository.findAll();
+                }else{
+                    orderStatusList = orderStatusRepository.findAllByStatus(status)
+                            .orElseThrow(()-> new ResourceNotFoundException("Order_status", "status", status));
+                }
+                System.out.print("list order_status size:"+orderStatusList.size());
+                List<OrderResponse> orderResponses = new ArrayList<>();
+
+                if (!orderStatusList.isEmpty()){
+                    for (Order_Status order_status:orderStatusList) {
+                        Order order = orderRepository.findById(order_status.getOrder_id().getOrder_id())
+                                .orElseThrow(()-> new ResourceNotFoundException("Order", "ID", order_status.getOrder_id().getOrder_id()));
+                        List<Order_Detail> orderDetail = orderDetailRepository.findAllByOrder(order)
+                                .orElseThrow(()-> new ResourceNotFoundException("Order_detail", "ID", order_status.getOrder_id().getOrder_id()));
+                        List<Order_DetailDTO> orderDetailDTOS = orderDetail.stream()
+                                .map(Utils::mapOrderDetail)
+                                .toList();
+                        User user = userRepository.findById(order.getUser_id().getUser_id())
+                                .orElseThrow(()-> new ResourceNotFoundException("User", "ID", order.getUser_id().getUser_id()));
+                        OrderResponse orderResponse = OrderResponse.builder()
+                                .orderDetailDTOS(orderDetailDTOS)
+                                .order_id(order.getOrder_id())
+                                .address_line_1(order.getAddress_line_1())
+                                .address_line_2(order.getAddress_line_2())
+                                .name(order.getName())
+                                .phone(order.getPhone())
+                                .total_price(order.getTotal_price())
+                                .date(order.getDate())
+                                .userDTO(Utils.mapUser(user))
+                                .build();
+                        orderResponses.add(orderResponse);
+                    }
+                }
+                response.setStatus(200);
+                response.setOrderResponses(orderResponses);
+
+            }catch (ResourceNotFoundException e){
+                response.setStatus(201);
+                response.setMessage(e.getMessage());
+            }catch (Exception e){
+                response.setStatus(500);
+                response.setMessage(e.getMessage());
+            }
+
+        return response;
+    }
+
+    public Response changeStatusOfOrder(Order_StatusDTO orderStatusDTO) {
+        Response response = new Response();
+        try{
+            Order_Status orderStatus = orderStatusRepository.findById(orderStatusDTO.getOrder_status_id())
+                    .orElseThrow(()-> new ResourceNotFoundException("Order status", "ID", orderStatusDTO.getOrder_status_id()));
+            orderStatus.setStatus(orderStatusDTO.getStatus());
+            orderStatusRepository.save(orderStatus);
+            response.setStatus(200);
+            response.setMessage("Change status success");
+        }catch (ResourceNotFoundException e){
+            response.setStatus(201);
+            response.setMessage(e.getMessage());
+        }catch (Exception e){
+            response.setStatus(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
 }
