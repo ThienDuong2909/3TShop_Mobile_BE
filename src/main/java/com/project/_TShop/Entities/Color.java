@@ -25,4 +25,7 @@ public class Color {
     @Column(name="hex",columnDefinition = "nvarchar(65)",nullable = false)
     private String hex;
 
+    @Column(name = "created_at", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 }

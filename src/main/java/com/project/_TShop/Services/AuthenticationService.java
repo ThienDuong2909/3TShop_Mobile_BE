@@ -41,7 +41,7 @@ public class AuthenticationService {
         Response response = new Response();
 
         if(isEmailOrUsernameExists(request)){
-            response.setStatus(409);
+            response.setStatus(209);
             response.setMessage("Email or username is used");
             return response;
         }
@@ -50,7 +50,7 @@ public class AuthenticationService {
         if (optionalRole.isPresent()) {
             roles.add(optionalRole.get());
         } else {
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("Default Role not found");
             return response;
         }
@@ -89,7 +89,7 @@ public class AuthenticationService {
     public Response updateResetPasswordToken(FogotPasswordRequest request, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
         Response response = new Response();
         if(!isEmailExistAndEnable(request)){
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("No registration found for this email, or the account has not been verified.");
         }
         Optional<Account> optionalAccount = accountRepo.findByEmail(request.getEmail());
@@ -100,7 +100,7 @@ public class AuthenticationService {
             response.setStatus(200);
             response.setMessage("update Reset Password Token and Send mail success");
         } else {
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("Account not found");
         }
         return response;
@@ -116,7 +116,7 @@ public class AuthenticationService {
             response.setStatus(200);
             response.setMessage("update Password success");
         } else {
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("Account not found");
         }
         return response;
@@ -125,6 +125,18 @@ public class AuthenticationService {
 
     public Response authenticate(AuthenticationRequest request) {
         Response response = new Response();
+
+        Optional<Account> optionalAccount = accountRepo.findByUsername(request.getUsername());
+        if (optionalAccount.isEmpty()) {
+            response.setStatus(202);
+            response.setMessage("Username not found");
+            return response;
+        }
+        if (!optionalAccount.get().isStatus()) {
+            response.setStatus(203);
+            response.setMessage("Your account is not verified. Please verify your account.");
+            return response;
+        }
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -134,17 +146,13 @@ public class AuthenticationService {
             );
         } catch (BadCredentialsException e) {
             // Nếu thông tin xác thực sai
-            response.setStatus(401);
+            response.setStatus(201);
             response.setMessage("Invalid username or password");
             return response;
         }
-        Optional<Account> optionalAccount = accountRepo.findByUsername(request.getUsername());
-
         var jwtToken = jwtService.generateToken(optionalAccount.get());
         response.setStatus(200);
         response.setToken(jwtToken);
-
-
       return response;
     }
 
