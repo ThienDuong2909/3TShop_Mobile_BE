@@ -1,9 +1,8 @@
 package com.project._TShop.Repositories;
 
-import com.project._TShop.Entities.Account;
-import com.project._TShop.Entities.Size;
-import com.project._TShop.Entities.Specifications;
-import com.project._TShop.Entities.User;
+
+import com.project._TShop.Entities.*;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

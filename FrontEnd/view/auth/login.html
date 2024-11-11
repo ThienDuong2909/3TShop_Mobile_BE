@@ -20,16 +20,18 @@
       href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Exa:wght@100..900&family=Lexend+Zetta:wght@100..900&family=Lexend:wght@100..900&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script
       src="https://kit.fontawesome.com/a9788993db.js"
       crossorigin="anonymous"
     ></script>
+
     <title>3TShop - ĐĂNG NHẬP</title>
   </head>
   <body>
     <div class="wrapper">
       <div class="content">
-        <img src="/FrontEnd/img/utils/LOGO_3TSHOP_ADMIN.png" class="logo_img" />
+        <img src="../../img/utils/LOGO_3TSHOP_ADMIN.png" class="logo_img" />
         <h2 class="wellcome__title">CHÀO MỪNG BẠN</h2>
         <div class="login__form">
           <div class="username__box">
@@ -61,15 +63,17 @@
             <a href="">Quên mật khẩu?</a>
           </div>
           <div class="action_form">
-            <button id="login__btn" class="btn__login">Đăng nhập</button>
+            <button id="login__btn" class="btn__login" onclick="login()">
+              Đăng nhập
+            </button>
             <span>hoặc</span>
             <button id="google__login__btn" class="btn__login">
-              <img src="/FrontEnd/img/utils/google_logo.png" />
+              <img src="../../img/utils/google_logo.png" />
               Đăng nhập với Google
             </button>
             <span
               >Bạn chưa có tài khoản?
-              <a href="">Đăng ký</a>
+              <a href="/register">Đăng ký</a>
             </span>
           </div>
         </div>
