@@ -119,4 +119,7 @@ public class SpecificationsService {
         }catch (Exception e){
             response.setStatus(500);
             response.setMessage(e.getMessage());
+        }
+        return response;
+    }
 }
