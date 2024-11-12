@@ -33,4 +33,9 @@ public class UserController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("/get-user-information")
+    public ResponseEntity<Response> getUserInformation(){
+        Response response = userService.getUserInfoCustomer();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
