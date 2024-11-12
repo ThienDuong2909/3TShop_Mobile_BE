@@ -1,6 +1,7 @@
 package com.project._TShop.Services;
 
 
+import com.project._TShop.DTO.AccountDTO;
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Entities.User;
 import com.project._TShop.Repositories.AccountRepository;
@@ -47,6 +48,35 @@ public class UserService {
             response.setStatus(200);
             response.setUserDTO(Utils.mapUser(currentUser.get()));
         }
+        return response;
+    }
+
+    public Response getUserInfoCustomer() {
+        Response response = new Response();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            Optional<User> currentUser = getCurrentUser();
+            if (currentUser.isEmpty()) {
+                response.setStatus(202);
+                response.setMessage("Not found User Info");
+                Account account = accountRepo.findByUsername(username)
+                    .orElseThrow(()-> new RuntimeException("Not found accout"));
+                AccountDTO accountDTO = new AccountDTO();
+                accountDTO.setEmail(account.getEmail());
+                response.setAccountDTO(accountDTO);
+            } else {
+                response.setStatus(200);
+                response.setUserDTO(Utils.mapUser(currentUser.get()));
+            }
+        }catch(RuntimeException e){
+            response.setStatus(400);
+            response.setMessage(e.getMessage());
+        }catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Error server");
+        }
+        
         return response;
     }
 }

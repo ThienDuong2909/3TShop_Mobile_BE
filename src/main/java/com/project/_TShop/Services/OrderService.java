@@ -98,6 +98,8 @@ public class OrderService {
                 totalPrice = totalPrice.add(price);
                 Order_Detail orderDetail = new Order_Detail(quantity, order, specifications);
                 orderDetailRepository.save(orderDetail);
+                specifications.setQuantity(specifications.getQuantity() - 1);
+                specificationsRepository.save(specifications);
             }
             order.setTotal_price(totalPrice);
             orderRepository.save(order);

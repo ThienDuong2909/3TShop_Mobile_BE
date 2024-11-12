@@ -9,6 +9,7 @@ import com.project._TShop.DTO.CartDTO;
 import com.project._TShop.DTO.Cart_ItemsDTO;
 import com.project._TShop.DTO.CategoryDTO;
 import com.project._TShop.DTO.ColorDTO;
+import com.project._TShop.DTO.Delevery_InformationDTO;
 import com.project._TShop.DTO.ImagesDTO;
 import com.project._TShop.DTO.OrderDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
@@ -23,6 +24,7 @@ import com.project._TShop.Entities.Cart;
 import com.project._TShop.Entities.Cart_Items;
 import com.project._TShop.Entities.Category;
 import com.project._TShop.Entities.Color;
+import com.project._TShop.Entities.Delevery_Infomation;
 import com.project._TShop.Entities.Images;
 import com.project._TShop.Entities.Order;
 import com.project._TShop.Entities.Order_Detail;
@@ -65,6 +67,19 @@ public class Utils {
         roleDTO.setRole_id(role.getRole_id());
         roleDTO.setName(role.getName());
         return roleDTO;
+    }
+
+    public static Delevery_InformationDTO mapDelevery_Information(Delevery_Infomation delevery_Infomation){
+        Delevery_InformationDTO delevery_InformationDTO = new Delevery_InformationDTO();
+        delevery_InformationDTO.setAddress_line_1(delevery_Infomation.getAddress_line_1());
+        delevery_InformationDTO.setAddress_line_2(delevery_Infomation.getAddress_line_2());
+        delevery_InformationDTO.setCreate_at(delevery_Infomation.getCreated_at());
+        delevery_InformationDTO.setDe_infor_id(delevery_Infomation.getDe_infor_id());
+        delevery_InformationDTO.setIs_default(delevery_Infomation.is_default());
+        delevery_InformationDTO.setName(delevery_Infomation.getName());
+        delevery_InformationDTO.setPhone(delevery_Infomation.getPhone());
+        delevery_InformationDTO.setUserDTO(mapUser(delevery_Infomation.getUser_id()));
+        return delevery_InformationDTO;
     }
 
     public static ProductDTO mapProduct(Product product){
@@ -202,5 +217,8 @@ public class Utils {
     }
     public static List<SpecificationsDTO> mapSpecificationss(List<Specifications> specifications){
         return specifications.stream().map(Utils::mapSpecifications).collect(Collectors.toList());
+    }
+    public static List<Delevery_InformationDTO> mapDelevery_InformationDTOs(List<Delevery_Infomation> specifications){
+        return specifications.stream().map(Utils::mapDelevery_Information).collect(Collectors.toList());
     }
 }
