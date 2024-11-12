@@ -58,6 +58,19 @@ function checkPasswordsMatch() {
     statusMessage.style.display = "none";
   }
 }
+function successRegister() {
+  const normalDisplay = document.querySelector(".normal__display");
+  const successRegisterBox = document.querySelector(".success___register__box");
+
+  // Kiểm tra sự tồn tại của các phần tử trước khi thao tác
+  if (normalDisplay) {
+    normalDisplay.style.display = "none";
+  }
+
+  if (successRegisterBox) {
+    successRegisterBox.style.display = "flex";
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("register__btn").onclick = function (event) {
@@ -80,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Username tối thiểu 8 kí tự";
       return;
     } else {
-      document.getElementById("username__status").style.display = "nonee";
+      document.getElementById("username__status").style.display = "none";
     }
     if (username.length > 65) {
       document.getElementById("username__status").style.display = "block";
@@ -88,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Username tối đa 65 kí tự";
       return;
     } else {
-      document.getElementById("username__status").style.display = "nonee";
+      document.getElementById("username__status").style.display = "none";
     }
 
     if (specialCharRegex.test(username)) {
@@ -97,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Username không được chứa kí tự đặt biệt";
       return;
     } else {
-      document.getElementById("username__status").style.display = "nonee";
+      document.getElementById("username__status").style.display = "none";
     }
 
     if (!emailRegex.test(email)) {
@@ -106,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Email không đúng định dạng";
       return;
     } else {
-      document.getElementById("email__status").style.display = "nonee";
+      document.getElementById("email__status").style.display = "none";
     }
 
     if (password.length < 8) {
@@ -115,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Mật khẩu tối thiểu 8 ký tự.";
       return;
     } else {
-      document.getElementById("password__status").style.display = "nonee";
+      document.getElementById("password__status").style.display = "none";
     }
 
     if (password.length > 65) {
@@ -125,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Mật khẩu tối đa 65 ký tự.";
       return;
     } else {
-      document.getElementById("password__status").style.display = "nonee";
+      document.getElementById("password__status").style.display = "none";
     }
 
     if (password !== confirmPassword) {
@@ -153,22 +166,20 @@ document.addEventListener("DOMContentLoaded", function () {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
-    }).then((response) => {
-      console.log(response);
-      // if (response.) {
-      //   return response.json();
-      // } else {
-      //   throw new Error("Đăng ký thất bại");
-      // }
-    });
-    // .then(data => {
-    //   alert("Đăng ký thành công!");
-    //   console.log(data);
-
-    // })
-    // .catch(error => {
-    //   console.error(error);
-    //   alert(error.message);
-    // });
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          successRegister();
+        } else if (data.status === 209) {
+          document.querySelector(".exist__noti").style.display = "block";
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
   };
 });

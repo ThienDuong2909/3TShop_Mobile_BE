@@ -33,9 +33,18 @@ async function login() {
   const username = document.getElementById("username__input").value;
   const password = document.getElementById("password__input").value;
 
-  if (!username || !password) {
-    alert("Vui lòng nhập tên tài khoản và mật khẩu");
+  if (!username) {
+    document.getElementById("username__status").style.display = "block";
     return;
+  } else {
+    document.getElementById("username__status").style.display = "none";
+  }
+
+  if (!password) {
+    document.getElementById("password__status").style.display = "block";
+    return;
+  } else {
+    document.getElementById("password__status").style.display = "none";
   }
 
   const payload = {
@@ -61,20 +70,35 @@ async function login() {
         const decoded = jwt_decode(data.token);
         const userRole = decoded.role;
         if (userRole === "[USER]") {
-          console.log("role:", userRole);
+          console.log("Account", decoded);
           // window.location.href = "/product";
         } else if (userRole === "[ADMIN]") {
-          console.log("role:", userRole);
+          console.log("Account:", decoded);
           // window.location.href = "/manager";
         }
       } catch (error) {
         console.error("Lỗi khi giải mã JWT:", error);
       }
-    } else {
-      alert(data.message || "Đăng nhập thất bại!");
+    } else if (response.status === 201) {
+      const statusElement = document.querySelector("#username__status");
+      if (statusElement) {
+        statusElement.innerHTML = "Tên tài khoản và mật khẩu không đúng.";
+        statusElement.style.display = "block";
+      }
+    } else if (response.status === 203) {
+      const statusElement = document.querySelector("#username__status");
+      if (statusElement) {
+        statusElement.innerHTML = "Tài khoản của bạn chưa được xác minh.";
+        statusElement.style.display = "block";
+      }
+    } else if (response.status === 202) {
+      const statusElement = document.querySelector("#username__status");
+      if (statusElement) {
+        statusElement.innerHTML = "Tài khoản không tồn tại.";
+        statusElement.style.display = "block";
+      }
     }
   } catch (error) {
-    console.error("Đăng nhập lỗi:", error);
     alert("Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại!");
   }
 }

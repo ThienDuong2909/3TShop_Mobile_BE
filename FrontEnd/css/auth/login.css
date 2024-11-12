@@ -47,10 +47,22 @@
 .username__box, .password__box{
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .password__box{
     margin-top: 20px;
     position: relative;
+}
+#username__status, #password__status{
+    display: none;
+    position: absolute;
+    bottom: -16px;
+    color: red;
+}
+.validate__noti{
+    display: none;
+    font-size: 10px;
+    font-weight: 300;
 }
 .toggle{
     position: absolute;

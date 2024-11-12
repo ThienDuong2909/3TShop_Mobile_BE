@@ -132,6 +132,7 @@ public class Utils {
         ColorDTO colorDTO = new ColorDTO();
         colorDTO.setColor_id(color.getColor_id());
         colorDTO.setHex(color.getHex());
+        colorDTO.setCreateAt(color.getCreatedAt());
         colorDTO.setName(color.getName());
         return colorDTO;
     }
