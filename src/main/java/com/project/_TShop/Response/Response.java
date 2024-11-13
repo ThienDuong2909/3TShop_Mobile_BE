@@ -1,6 +1,7 @@
 package com.project._TShop.Response;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -50,4 +51,7 @@ public class Response {
     private List<SizeDTO> sizeDTOList;
     private List<SpecificationsDTO> specificationsDTOList;
     private List<OrderResponse> orderResponses;
+
+    private List<Map<String, Object>> dataAnalysis;
+    private Map<String, Object> dataAnalysisMap;
 }

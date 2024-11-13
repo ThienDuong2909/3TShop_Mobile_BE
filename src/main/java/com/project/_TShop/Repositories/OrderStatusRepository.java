@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project._TShop.Entities.Order_Status;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ public interface OrderStatusRepository extends JpaRepository<Order_Status, Integ
     @Query("SELECT o FROM Order_Status o WHERE o.order_id = :order")
     Optional<Order_Status> findByOrder(Order order);
 
-//    @Query("SELECT o FROM Order_Status o WHERE o.order_id = :orderId")
-//    Optional<Order_Status> findByOrderId(int orderId);
+    @Query("SELECT os FROM Order_Status os WHERE FUNCTION('MONTH', os.created_at) = :month " +
+            "AND FUNCTION('YEAR', os.created_at) = :year AND os.status = 3")
+    Optional<List<Order_Status>> findByStatusAndMonthYear(@Param("month") int month, @Param("year") int year);
 }
