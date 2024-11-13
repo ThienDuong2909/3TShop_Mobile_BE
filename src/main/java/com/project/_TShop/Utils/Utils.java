@@ -172,6 +172,7 @@ public class Utils {
         order_StatusDTO.setCreate_at(order_Status.getCreated_at());
         order_StatusDTO.setOrderDTO(mapOrder(order_Status.getOrder_id()));
         order_StatusDTO.setOrder_status_id(order_Status.getOrder_status_id());
+        order_StatusDTO.setNote(order_Status.getNote());
         order_StatusDTO.setStatus(order_Status.getStatus());
         return order_StatusDTO;
     }

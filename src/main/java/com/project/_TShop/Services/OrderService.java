@@ -10,6 +10,7 @@ import com.project._TShop.DTO.OrderDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
 import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
+import com.project._TShop.Request.ChangeSatusRequest;
 import com.project._TShop.Response.OrderResponse;
 import org.springframework.stereotype.Service;
 
@@ -167,6 +168,7 @@ public class OrderService {
                                 .total_price(order.getTotal_price())
                                 .date(order.getDate())
                                 .userDTO(Utils.mapUser(user))
+                                .orderStatusDTO(Utils.mapOrder_Status(order_status))
                                 .build();
                         orderResponses.add(orderResponse);
                     }
@@ -185,12 +187,37 @@ public class OrderService {
         return response;
     }
 
-    public Response changeStatusOfOrder(Order_StatusDTO orderStatusDTO) {
+    public Response changeStatusOfOrder(ChangeSatusRequest changeSatusRequest) {
         Response response = new Response();
         try{
-            Order_Status orderStatus = orderStatusRepository.findById(orderStatusDTO.getOrder_status_id())
-                    .orElseThrow(()-> new ResourceNotFoundException("Order status", "ID", orderStatusDTO.getOrder_status_id()));
-            orderStatus.setStatus(orderStatusDTO.getStatus());
+            Order order = orderRepository.findById(changeSatusRequest.getOrder_id())
+                    .orElseThrow(()-> new ResourceNotFoundException("Order", "ID", changeSatusRequest.getOrder_id()));
+            Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                    .orElseThrow(()-> new ResourceNotFoundException("Order status", "ID", order.getOrder_id()));
+            if(changeSatusRequest.getStatus() == 3){
+                List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                        .orElseThrow(()-> new ResourceNotFoundException("OrderDetail", "Order ID", order.getOrder_id()));
+                for (Order_Detail orderDetail: orderDetails) {
+                    Specifications specification = specificationsRepository.findById(orderDetail.getSpecifications().getSpecifications_id())
+                            .orElseThrow(()-> new ResourceNotFoundException("Specification", "ID", orderDetail.getSpecifications().getSpecifications_id()));
+                    Product product = productRepository.findById(specification.getProduct().getProduct_id())
+                            .orElseThrow(()-> new ResourceNotFoundException("Product", "ID", specification.getProduct().getProduct_id()));
+                    product.setSold(product.getSold()+ orderDetail.getQuantity());
+                    productRepository.save(product);
+                }
+            }else if(changeSatusRequest.getStatus() == 4){
+                List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                        .orElseThrow(()-> new ResourceNotFoundException("OrderDetail", "Order ID", order.getOrder_id()));
+                for (Order_Detail orderDetail: orderDetails) {
+                    Specifications specification = specificationsRepository.findById(orderDetail.getSpecifications().getSpecifications_id())
+                            .orElseThrow(()-> new ResourceNotFoundException("Specification", "ID", orderDetail.getSpecifications().getSpecifications_id()));
+                    orderStatus.setNote(changeSatusRequest.getNote());
+                    orderStatus.setCreated_at(new Date());
+                    specification.setQuantity(specification.getQuantity()+ orderDetail.getQuantity());
+                    specificationsRepository.save(specification);
+                }
+            }
+            orderStatus.setStatus(changeSatusRequest.getStatus());
             orderStatusRepository.save(orderStatus);
             response.setStatus(200);
             response.setMessage("Change status success");
