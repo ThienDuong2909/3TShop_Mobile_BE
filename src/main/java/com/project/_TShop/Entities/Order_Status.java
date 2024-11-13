@@ -40,4 +40,10 @@ public class Order_Status {
         this.order_id = order_id;
     }
 
+    public Order_Status(int status, Date created_at, Order order_id, String note) {
+        this.status = status;
+        this.created_at = created_at;
+        this.order_id = order_id;
+    }
+
 }
