@@ -21,7 +21,7 @@ public class Images {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer image_id;
     
-    @Column(name="image_data",columnDefinition = "varchar(64)",nullable = false)
+    @Column(name="image_data",columnDefinition = "LONGTEXT",nullable = false)
     private String image_data;
 
     @ManyToOne

@@ -1,8 +1,10 @@
 package com.project._TShop.Response;
 
 import com.project._TShop.DTO.Order_DetailDTO;
+import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.DTO.UserDTO;
 import com.project._TShop.Entities.Account;
+import com.project._TShop.Entities.Order_Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +28,5 @@ public class OrderResponse {
     private Date date;
     private List<Order_DetailDTO> orderDetailDTOS;
     private UserDTO userDTO;
+    private Order_StatusDTO orderStatusDTO;
 }
