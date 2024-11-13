@@ -12,4 +12,6 @@ import java.util.Set;
 public interface OrderDetailRepository extends JpaRepository<Order_Detail, Integer>{
 
     Optional<List<Order_Detail>> findAllByOrder(Order order);
+
+    List<Order_Detail> findByOrder(Order order);
 }
