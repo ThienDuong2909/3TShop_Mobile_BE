@@ -2,7 +2,9 @@ package com.project._TShop.Controllers;
 
 import java.util.List;
 
+import com.project._TShop.DTO.OrderDTO;
 import com.project._TShop.DTO.Order_StatusDTO;
+import com.project._TShop.Request.ChangeSatusRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -67,9 +69,9 @@ public class OrderController {
     @PostMapping("/change-status")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> changeStatus(
-            @RequestBody Order_StatusDTO orderStatusDTO
+            @RequestBody ChangeSatusRequest changeSatusRequest
     ){
-        Response response = orderService.changeStatusOfOrder(orderStatusDTO);
+        Response response = orderService.changeStatusOfOrder(changeSatusRequest);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

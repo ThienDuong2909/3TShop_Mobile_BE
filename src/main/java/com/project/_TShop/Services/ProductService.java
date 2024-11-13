@@ -378,4 +378,22 @@ public class ProductService {
         }
         return response;
     }
+
+    public Response getByCategoryIgnoreStatus(Integer idCategory) {
+        Response response = new Response();
+        try {
+            List<Product> products = productRepository.findByCategory(idCategory);
+            response.setStatus(200);
+            response.setMessage("Get products by category success");
+            response.setProductDTOList(Utils.mapProducts(products));
+        } catch (RuntimeException e) {
+            response.setStatus(202);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Lỗi: " + e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
 }
