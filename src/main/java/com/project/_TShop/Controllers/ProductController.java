@@ -100,6 +100,13 @@ public class ProductController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("get-by-name/{name}")
+    public ResponseEntity<Response> getByName(@PathVariable("name") String name) {
+        Response response = productService.getByName(name);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+
     @GetMapping("/get-available-product")
     public ResponseEntity<Response> getAvailable(){
         Response response = productService.getAvailableProduct();

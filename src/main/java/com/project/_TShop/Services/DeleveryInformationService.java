@@ -87,6 +87,30 @@ public class DeleveryInformationService {
         return response;
     }
 
+    public Response editDelevery(Delevery_InformationDTO delevery_InformationDTO){
+        Response response = new Response();
+        try {
+            Delevery_Infomation delevery_Infomation = deleveryInformationRepository.findById(delevery_InformationDTO.getDe_infor_id())
+                .orElseThrow(()-> new RuntimeException("Not found delevery information"));
+            delevery_Infomation.setAddress_line_1(delevery_InformationDTO.getAddress_line_1());
+            delevery_Infomation.setAddress_line_2(delevery_InformationDTO.getAddress_line_2());
+            delevery_Infomation.setName(delevery_Infomation.getName());
+            delevery_Infomation.setPhone(delevery_InformationDTO.getPhone());
+            deleveryInformationRepository.save(delevery_Infomation);
+            response.setStatus(200);
+            response.setMessage("Create success");
+        }catch(RuntimeException e){
+            response.setStatus(202);
+            System.out.print("lỗi: " + e.getMessage());
+            response.setMessage(e.getMessage());
+        } 
+        catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Error server");
+        }
+        return response;
+    }
+
     @Transactional
     public Response setDefault(Integer idAddress){
         Response response = new Response();

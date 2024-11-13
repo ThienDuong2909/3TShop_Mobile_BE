@@ -37,5 +37,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
            """)
     List<Product> findAvailableProducts();
 
-
+    List<Product> findByNameContainingIgnoreCase(String name);
 }
