@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/delevery-information")
-public class DelveryInformationController {
+public class DeleveryInformationController {
     private final DeleveryInformationService deleveryInformationService;
 
     @GetMapping("/get-by-user")
@@ -46,10 +46,17 @@ public class DelveryInformationController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Response> getByUser(@RequestBody Delevery_InformationDTO delevery_InformationDTO){
+    public ResponseEntity<Response> addDelevery(@RequestBody Delevery_InformationDTO delevery_InformationDTO){
         System.out.print(delevery_InformationDTO);
-        // Response response = new Response();
         Response response = deleveryInformationService.createNew(delevery_InformationDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PostMapping("/edit")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> editDelevery(@RequestBody Delevery_InformationDTO delevery_InformationDTO){
+        System.out.print(delevery_InformationDTO);
+        Response response = deleveryInformationService.editDelevery(delevery_InformationDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

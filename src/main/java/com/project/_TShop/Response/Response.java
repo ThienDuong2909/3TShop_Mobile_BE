@@ -50,4 +50,5 @@ public class Response {
     private List<SizeDTO> sizeDTOList;
     private List<SpecificationsDTO> specificationsDTOList;
     private List<OrderResponse> orderResponses;
+    private List<ProductSpecDTO> productSpecDTOList;
 }
