@@ -54,4 +54,5 @@ public class Response {
 
     private List<Map<String, Object>> dataAnalysis;
     private Map<String, Object> dataAnalysisMap;
+    private List<ProductSpecDTO> productSpecDTOList;
 }

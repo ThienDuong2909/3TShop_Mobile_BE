@@ -42,4 +42,15 @@ public class User {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    public User(String f_name, String l_name, boolean gender, String phone, String email, String date_of_birth,
+            Account account) {
+        this.f_name = f_name;
+        this.l_name = l_name;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.date_of_birth = date_of_birth;
+        this.account = account;
+    }
+
 }

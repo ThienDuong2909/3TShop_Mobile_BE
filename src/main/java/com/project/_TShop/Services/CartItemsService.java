@@ -59,11 +59,11 @@ public class CartItemsService {
                 .orElseThrow(() -> new RuntimeException("Account not found"));
             Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-            Color color = colorRepository.findById(cartItemRequest.getColorId())
-                .orElseThrow(() -> new RuntimeException("Color not found"));
-            Size size = sizeRepository.findById(cartItemRequest.getSizeId())
-                .orElseThrow(() -> new RuntimeException("Size not found"));
-            Specifications specifications = specificationsRepository.findByColorAndSizeAndProduct(color, size, product)
+            // Color color = colorRepository.findById(cartItemRequest.getColorId())
+            //     .orElseThrow(() -> new RuntimeException("Color not found"));
+            // Size size = sizeRepository.findById(cartItemRequest.getSizeId())
+            //     .orElseThrow(() -> new RuntimeException("Size not found"));
+            Specifications specifications = specificationsRepository.findById(cartItemRequest.getSpec_id())
                 .orElseThrow(() -> new RuntimeException("Specifications not found"));
             Cart cart = cartRepository.findByAccount(account)
                 .orElseGet(() -> {
@@ -97,9 +97,13 @@ public class CartItemsService {
     public Response deleteCartItem(Integer id) {
         Response response = new Response();
         try {
-            
+            Cart_Items cart_Items = cartItemsRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Not found cart item"));
+            cartItemsRepository.delete(cart_Items);
+            response.setStatus(200);
+            response.setMessage("Delete success");
         } catch (RuntimeException e) {
-            response.setStatus(404);
+            response.setStatus(400);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());

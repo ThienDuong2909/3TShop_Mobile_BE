@@ -31,6 +31,7 @@ public interface SpecificationsRepository extends JpaRepository<Specifications, 
         @Param("size") Size size,
         @Param("product") Product product
     );
+    List<Specifications> findByProductAndStatus(Product product, int status);
     // @Query("SELECT s FROM Specifications s WHERE s.product.product_id = :productId AND s.quantity > :quantity")
     // List<Specifications> findByProductIdAndQuantityGreaterThan(@Param("productId") Integer productId, @Param("quantity") int quantity);
 }

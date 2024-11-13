@@ -1,5 +1,6 @@
 package com.project._TShop.Controllers;
 
+import com.project._TShop.DTO.UserDTO;
 import com.project._TShop.Request.AuthenticationRequest;
 import com.project._TShop.Request.FogotPasswordRequest;
 import com.project._TShop.Request.RegisterRequest;
@@ -13,6 +14,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -33,4 +35,17 @@ public class UserController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("/get-user-information")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getUserInformation(){
+        Response response = userService.getUserInfoCustomer();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PostMapping("/edit-user-information")    
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> editInfor(@RequestBody UserDTO userDTO){
+        Response response = userService.editInfor(userDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

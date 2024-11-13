@@ -11,7 +11,11 @@ public class Delevery_InformationDTO {
     private String phone;
     private String address_line_1;
     private String address_line_2;
-    private String is_default;
+    private boolean is_default;
     private Date create_at;
     private UserDTO userDTO;
+
+    public void setIs_default(boolean is_default) {
+        this.is_default = is_default;
+    }
 }

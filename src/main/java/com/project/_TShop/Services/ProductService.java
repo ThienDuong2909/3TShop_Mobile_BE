@@ -4,8 +4,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.project._TShop.DTO.ProductDTO;
+import com.project._TShop.DTO.ProductSpecDTO;
 import com.project._TShop.DTO.SpecificationsDTO;
 import com.project._TShop.Entities.*;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
@@ -123,19 +125,100 @@ public class ProductService {
         return response;
     }
 
+    // public Response getByCategory(Integer idCategory) {
+    //     Response response = new Response();
+    //     try {
+    //         Category category = categoryRepository.findById(idCategory)
+    //             .orElseThrow(() -> new RuntimeException("Category not found"));
+    //         List<Product> products = productRepository.findAvailableProducts();
+    //         List<Product> filteredProducts = products.stream()
+    //             .filter(product -> product.getCategory_id().equals(category)) 
+    //             .limit(10) 
+    //             .toList();
+    //         response.setStatus(200);
+    //         response.setMessage("Get products by category success");
+    //         response.setProductDTOList(Utils.mapProducts(filteredProducts));
+    //     } catch (RuntimeException e) {
+    //         response.setStatus(202);
+    //         response.setMessage(e.getMessage());
+    //     } catch (Exception e) {
+    //         System.out.println("Lỗi: " + e.getMessage());
+    //         response.setStatus(500);
+    //         response.setMessage("Server error");
+    //     }
+    //     return response;
+    // } 
+    
+    // public Response getByName(String name) {
+    //     Response response = new Response();
+    //     try {
+    //         String formattedName = name.replace("-", " ");
+            
+    //         List<Product> products = productRepository.findByNameContainingIgnoreCase(formattedName);
+            
+    //         if (products.isEmpty()) {
+    //             response.setStatus(202);
+    //             response.setMessage("Không tìm thấy sản phẩm với tên: " + formattedName);
+    //         } else {
+    //             response.setStatus(200);
+    //             response.setMessage("Tìm thấy sản phẩm thành công");
+    //             response.setProductDTOList(Utils.mapProducts(products));
+    //         }
+    //     } catch (Exception e) {
+    //         System.out.println("Lỗi: " + e.getMessage());
+    //         response.setStatus(500);
+    //         response.setMessage("Lỗi máy chủ");
+    //     }
+    //     return response;
+    // }    
+
+     private ProductSpecDTO mapToProductSpecDTO(Product product, List<Specifications> specs) {
+        List<ProductSpecDTO.SpecificationInfo> specInfoList = specs.stream()
+            .map(spec -> ProductSpecDTO.SpecificationInfo.builder()
+                .size(spec.getSize_id().getName())
+                .color(spec.getColor().getName())
+                .quantity(spec.getQuantity())
+                .build())
+            .collect(Collectors.toList());
+
+        return ProductSpecDTO.builder()
+            .product_id(product.getProduct_id())
+            .name(product.getName())
+            .description(product.getDescription())
+            .image(product.getImage())
+            .price(product.getPrice())
+            .sold(product.getSold())
+            .which_gender(product.getWhich_gender())
+            .created_at(product.getCreated_at())
+            .status(product.getStatus())
+            .categoryName(product.getCategory_id().getName())
+            .specifications(specInfoList)
+            .build();
+    }
+
     public Response getByCategory(Integer idCategory) {
         Response response = new Response();
         try {
             Category category = categoryRepository.findById(idCategory)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
+            
             List<Product> products = productRepository.findAvailableProducts();
             List<Product> filteredProducts = products.stream()
-                .filter(product -> product.getCategory_id().equals(category)) 
-                .limit(10) 
-                .toList();
+                .filter(product -> product.getCategory_id().equals(category))
+                .limit(10)
+                .collect(Collectors.toList());
+
+            List<ProductSpecDTO> productSpecDTOs = filteredProducts.stream()
+                .map(product -> {
+                    List<Specifications> specs = specRepo
+                        .findByProductAndStatus(product, 1); 
+                    return mapToProductSpecDTO(product, specs);
+                })
+                .collect(Collectors.toList());
+
             response.setStatus(200);
             response.setMessage("Get products by category success");
-            response.setProductDTOList(Utils.mapProducts(filteredProducts));
+            response.setProductSpecDTOList(productSpecDTOs);
         } catch (RuntimeException e) {
             response.setStatus(202);
             response.setMessage(e.getMessage());
@@ -145,7 +228,38 @@ public class ProductService {
             response.setMessage("Server error");
         }
         return response;
-    }    
+    }
+   
+    public Response getByName(String name) {
+        Response response = new Response();
+        try {
+            String formattedName = name.replace("-", " ");
+           
+            List<Product> products = productRepository.findByNameContainingIgnoreCase(formattedName);
+           
+            if (products.isEmpty()) {
+                response.setStatus(202);
+                response.setMessage("Không tìm thấy sản phẩm với tên: " + formattedName);
+            } else {
+                List<ProductSpecDTO> productSpecDTOs = products.stream()
+                    .map(product -> {
+                        List<Specifications> specs = specRepo
+                            .findByProductAndStatus(product, 1);
+                        return mapToProductSpecDTO(product, specs);
+                    })
+                    .collect(Collectors.toList());
+
+                response.setStatus(200);
+                response.setMessage("Tìm thấy sản phẩm thành công");
+                response.setProductSpecDTOList(productSpecDTOs);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi: " + e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Lỗi máy chủ");
+        }
+        return response;
+    }
 
     public Response getNewProducts() {
         Response response = new Response();
@@ -164,7 +278,7 @@ public class ProductService {
         return response;
 
     }
-@Transactional
+    @Transactional
     public Response addProduct(ProductWithSpecificationsRequest request) {
 
         Response response = new Response();
