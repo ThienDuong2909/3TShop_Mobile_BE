@@ -12,6 +12,9 @@ import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
 import com.project._TShop.Request.ChangeSatusRequest;
 import com.project._TShop.Response.OrderResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Entities.Account;
@@ -59,7 +62,7 @@ public class OrderService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public Response createOrder(String username, Integer idAddress, List<OrderDetailRequest> orderRequests) {
+    public Response createOrder(String username, Integer idAddress, String note, BigDecimal fee, List<OrderDetailRequest> orderRequests) {
         Response response = new Response();
         try {
             Account account = accountRepository.findByUsername(username)
@@ -96,7 +99,7 @@ public class OrderService {
                 Specifications specifications = specificationsRepository.findByColorAndSizeAndProduct(color, size, product)
                     .orElseThrow(() -> new RuntimeException("Not found specifications")); 
                 BigDecimal price = specifications.getProduct().getPrice().multiply(BigDecimal.valueOf(quantity));
-                totalPrice = totalPrice.add(price);
+                totalPrice = totalPrice.add(price).add(fee);
                 Order_Detail orderDetail = new Order_Detail(quantity, order, specifications);
                 orderDetailRepository.save(orderDetail);
                 specifications.setQuantity(specifications.getQuantity() - 1);
@@ -104,7 +107,7 @@ public class OrderService {
             }
             order.setTotal_price(totalPrice);
             orderRepository.save(order);
-            Order_Status orderStatus = new Order_Status(1, date, order);
+            Order_Status orderStatus = new Order_Status(1, date, order, note);
             orderStatusRepository.save(orderStatus);
 
             for (OrderDetailRequest orderRequest : orderRequests) {
@@ -232,4 +235,67 @@ public class OrderService {
         }
         return response;
     }
+
+    public Response getOrderByStatus(int status) {
+        Response response = new Response();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            Account account = accountRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+            User user = userRepository.findByAccount(account)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+    
+            List<Order> orders = orderRepository.findAllByUser(user);
+            if (!orders.isEmpty()) {
+                List<OrderResponse> orderResponses = new ArrayList<>();
+    
+                for (Order order : orders) {
+                    Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                            .orElseThrow(() -> new RuntimeException("Order status not found"));
+                    
+                    if (orderStatus.getStatus() == status) {
+                        List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                                .orElseThrow(() -> new RuntimeException("Not found order detail!"));
+                        List<Order_DetailDTO> orderDetailDTOs = orderDetails.stream()
+                                .map(Utils::mapOrderDetail)
+                                .toList();
+    
+                        OrderResponse orderResponse = OrderResponse.builder()
+                                .orderDetailDTOS(orderDetailDTOs)
+                                .order_id(order.getOrder_id())
+                                .address_line_1(order.getAddress_line_1())
+                                .address_line_2(order.getAddress_line_2())
+                                .name(order.getName())
+                                .phone(order.getPhone())
+                                .note(orderStatus.getNote())
+                                .total_price(order.getTotal_price())
+                                .date(order.getDate())
+                                .userDTO(Utils.mapUser(user))
+                                .orderStatusDTO(Utils.mapOrder_Status(orderStatus))
+                                .build();
+                        orderResponses.add(orderResponse);
+                    }
+                }
+    
+                if (!orderResponses.isEmpty()) {
+                    response.setStatus(200);
+                    response.setOrderResponses(orderResponses);
+                } else {
+                    response.setStatus(202);
+                    response.setMessage("No orders with the specified status");
+                }
+            } else {
+                response.setStatus(202);
+                response.setMessage("No orders found");
+            }
+        } catch (RuntimeException e) {
+            response.setStatus(201);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }    
 }

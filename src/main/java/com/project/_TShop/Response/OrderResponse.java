@@ -26,6 +26,7 @@ public class OrderResponse {
     private String address_line_2;
     private BigDecimal total_price;
     private Date date;
+    private String note;
     private List<Order_DetailDTO> orderDetailDTOS;
     private UserDTO userDTO;
     private Order_StatusDTO orderStatusDTO;

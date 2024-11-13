@@ -31,7 +31,7 @@ public class OrderController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         System.out.print("User name là: " + orderRequest);
-        Response response = orderService.createOrder(username, orderRequest.getIdAddress(), orderRequest.getOrderRequests());
+        Response response = orderService.createOrder(username, orderRequest.getIdAddress(), orderRequest.getNote(), orderRequest.getFee(), orderRequest.getOrderRequests());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -67,11 +67,18 @@ public class OrderController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @PostMapping("/change-status")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<Response> changeStatus(
             @RequestBody ChangeSatusRequest changeSatusRequest
     ){
         Response response = orderService.changeStatusOfOrder(changeSatusRequest);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/get-by-user/{status}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getByUser(@PathVariable("status") int status){
+        Response response = orderService.getOrderByStatus(status);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }
