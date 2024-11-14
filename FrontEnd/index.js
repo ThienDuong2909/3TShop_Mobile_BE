@@ -14,10 +14,18 @@ app.get("/", (req, res) => {
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "auth/login.html"));
 });
+app.get("/forgot-password", (req, res) => {
+  res.sendFile(path.join(__dirname, "view", "auth/forgot-password.html"));
+});
+app.get("/reset-password", (req, res) => {
+  res.sendFile(path.join(__dirname, "view", "auth/reset-password.html"));
+});
 app.get("/register", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "auth/register.html"));
 });
-
+app.get("/verify", (req, res) => {
+  res.sendFile(path.join(__dirname, "view", "auth/verify-register.html"));
+});
 app.get("/tee", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "user/category.html"));
 });

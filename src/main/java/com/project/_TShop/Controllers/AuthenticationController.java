@@ -23,6 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -48,8 +50,8 @@ public class AuthenticationController {
         Response response = accountService.isValidRegistrationToken(code);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-    @PostMapping("/fogot-password")
-    public ResponseEntity<?> fogotPassword(
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(
             @RequestBody FogotPasswordRequest request, HttpServletRequest req
     ) throws MessagingException, UnsupportedEncodingException {
         Response response = authenticationService.updateResetPasswordToken(request, req);
@@ -69,4 +71,10 @@ public class AuthenticationController {
         Response response = authenticationService.authenticate(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+//    @PostMapping("/google/callback")
+//    public ResponseEntity<Map<String, String>> googleCallback(@RequestParam String token) {
+//        Map<String, String> response = new HashMap<>();
+//        response.put("token", token);
+//        return ResponseEntity.ok(response);
+//    }
 }

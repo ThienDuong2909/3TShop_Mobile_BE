@@ -30,7 +30,9 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom("khinthij@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
-        String verifyURL = siteURL + "/verify?code=" + account.getRegistrationToken();
+//        String verifyURL = siteURL + "/verify?code=" + account.getRegistrationToken();
+        String verifyURL = "http://localhost:3003/verify?code=" + account.getRegistrationToken();
+
         System.out.println(verifyURL);
 
         String subject = "Xác nhận đăng kí tài khoản";
@@ -50,7 +52,9 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom("khinthij@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
-        String verifyURL = siteURL + "/verify?code=" + account.getResetPasswordToken();
+//        String verifyURL = siteURL + "/reset-password?code=" + account.getResetPasswordToken();
+        String verifyURL = "http://localhost:3003/reset-password?code=" + account.getResetPasswordToken();
+
         System.out.println(verifyURL);
 
         String subject = "Đặt lại mật khẩu";

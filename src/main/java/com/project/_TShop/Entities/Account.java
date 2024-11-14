@@ -21,10 +21,10 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer account_id;
 
-    @Column(name="username",columnDefinition = "varchar(65)",nullable = false)
+    @Column(name="username",columnDefinition = "varchar(65)")
     private String username;
 
-    @Column(name="password",columnDefinition = "varchar(65)",nullable = false)
+    @Column(name="password",columnDefinition = "varchar(65)")
     private String password;
 
     @Column(name="email",nullable = false)
