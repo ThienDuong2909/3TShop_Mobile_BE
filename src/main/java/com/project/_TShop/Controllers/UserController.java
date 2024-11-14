@@ -2,6 +2,7 @@ package com.project._TShop.Controllers;
 
 import com.project._TShop.DTO.UserDTO;
 import com.project._TShop.Request.AuthenticationRequest;
+import com.project._TShop.Request.ChangePasswordReq;
 import com.project._TShop.Request.FogotPasswordRequest;
 import com.project._TShop.Request.RegisterRequest;
 import com.project._TShop.Request.ResetPasswordRequest;
@@ -25,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 
 public class UserController {
 
-    private final AuthenticationService authenticationService;
+    private final AccountService accountService;
     private final UserService userService;
 
 
@@ -47,5 +48,12 @@ public class UserController {
     public ResponseEntity<Response> editInfor(@RequestBody UserDTO userDTO){
         Response response = userService.editInfor(userDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PostMapping("/change-password")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> changePassword(@RequestBody ChangePasswordReq request){
+        System.out.print("ĐỔi mật khẩu" + request);
+       Response response = accountService.changePassword(request);
+       return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

@@ -117,6 +117,7 @@ public class CartItemsService {
         Response response = new Response();
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println("username là "+username);
             Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
             Cart cart = cartRepository.findByAccount(account)

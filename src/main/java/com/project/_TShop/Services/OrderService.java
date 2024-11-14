@@ -64,6 +64,7 @@ public class OrderService {
     @Transactional
     public Response createOrder(String username, Integer idAddress, String note, BigDecimal fee, List<OrderDetailRequest> orderRequests) {
         Response response = new Response();
+        System.out.println("order-status note: " + note);
         try {
             Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Not found account"));
@@ -108,6 +109,7 @@ public class OrderService {
             order.setTotal_price(totalPrice);
             orderRepository.save(order);
             Order_Status orderStatus = new Order_Status(1, date, order, note);
+            System.out.println("order-status: " +orderStatus);
             orderStatusRepository.save(orderStatus);
 
             for (OrderDetailRequest orderRequest : orderRequests) {
@@ -132,7 +134,8 @@ public class OrderService {
             response.setStatus(202);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
-            response.setMessage("Error: " + e.getMessage());
+            System.out.print("Lỗi" + e.toString());
+            response.setMessage("Error: " + e.toString());
             response.setStatus(500);
             e.printStackTrace();
         }
@@ -172,6 +175,7 @@ public class OrderService {
                                 .phone(order.getPhone())
                                 .total_price(order.getTotal_price())
                                 .date(order.getDate())
+                                .note(order_status.getNote())
                                 .userDTO(Utils.mapUser(user))
                                 .orderStatusDTO(Utils.mapOrder_Status(order_status))
                                 .build();

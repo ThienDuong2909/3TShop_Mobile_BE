@@ -44,6 +44,7 @@ public class Order_Status {
         this.status = status;
         this.created_at = created_at;
         this.order_id = order_id;
+        this.note = note;
     }
 
 }

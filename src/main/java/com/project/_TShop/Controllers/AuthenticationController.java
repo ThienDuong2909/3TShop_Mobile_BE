@@ -2,6 +2,7 @@ package com.project._TShop.Controllers;
 
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Request.AuthenticationRequest;
+import com.project._TShop.Request.ChangePasswordReq;
 import com.project._TShop.Request.FogotPasswordRequest;
 import com.project._TShop.Request.RegisterRequest;
 import com.project._TShop.Request.ResetPasswordRequest;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
