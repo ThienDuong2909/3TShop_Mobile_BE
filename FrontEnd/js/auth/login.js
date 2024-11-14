@@ -71,10 +71,10 @@ async function login() {
         const userRole = decoded.role;
         if (userRole === "[USER]") {
           console.log("Account", decoded);
-          // window.location.href = "/product";
+          window.location.href = "/";
         } else if (userRole === "[ADMIN]") {
           console.log("Account:", decoded);
-          // window.location.href = "/manager";
+          window.location.href = "/admin/dashboard";
         }
       } catch (error) {
         console.error("Lỗi khi giải mã JWT:", error);

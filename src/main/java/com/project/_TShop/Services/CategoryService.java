@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.project._TShop.DTO.CategoryDTO;
+import com.project._TShop.Exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,13 +63,14 @@ public class CategoryService {
     public Response updateCategory(CategoryDTO categoryDTO) {
         Response response = new Response();
         try {
-            if(categoryRepository.findByName(categoryDTO.getName().toUpperCase()).isPresent()){
+            Optional<Category> category = Optional.ofNullable(categoryRepository.findByCategoryId(categoryDTO.getCategory_id()));
+            Optional<Category> categoryByname = categoryRepository.findByName(categoryDTO.getName().toUpperCase());
+
+            if(categoryByname.isPresent() && categoryByname.get().getCategory_id()!= category.get().getCategory_id() ){
                 response.setStatus(209);
                 response.setMessage("Category name had been used");
                 return response;
             }
-            Optional<Category> category = Optional.ofNullable(categoryRepository.findByCategoryId(categoryDTO.getCategory_id()));
-
             category.get().setName(categoryDTO.getName());
             category.get().setImage(categoryDTO.getImage());
             categoryRepository.save(category.get());

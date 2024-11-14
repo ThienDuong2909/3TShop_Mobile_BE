@@ -87,6 +87,7 @@ public class AuthenticationService {
     }
 
     public Response updateResetPasswordToken(FogotPasswordRequest request, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("Mail: "+ request.getEmail());
         Response response = new Response();
         if(!isEmailExistAndEnable(request)){
             response.setStatus(201);
@@ -100,15 +101,17 @@ public class AuthenticationService {
             response.setStatus(200);
             response.setMessage("update Reset Password Token and Send mail success");
         } else {
-            response.setStatus(201);
+            response.setStatus(202);
             response.setMessage("Account not found");
         }
         return response;
     }
 
     public Response updatePassword(ResetPasswordRequest request) {
+        System.out.println("New Password: "+request.getNewPassword());
         Response response = new Response();
         Optional <Account> optionalAccount = accountRepo.findByResetPasswordToken(request.getToken());
+        System.out.println(optionalAccount);
         if (optionalAccount.isPresent()) {
             optionalAccount.get().setResetPasswordToken(null);
             optionalAccount.get().setPassword(passwordEncoder.encode(request.getNewPassword()));

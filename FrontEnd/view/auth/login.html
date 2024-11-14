@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="forgot__password__box">
-            <a href="">Quên mật khẩu?</a>
+            <a href="/forgot-password">Quên mật khẩu?</a>
           </div>
           <div class="action_form">
             <button id="login__btn" class="btn__login" onclick="login()">
@@ -87,4 +87,24 @@
     </div>
   </body>
   <script src="../../js/auth/login.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    document
+      .getElementById("google__login__btn")
+      .addEventListener("click", function () {
+        window.location.href =
+          "http://localhost:8080/oauth2/authorization/google";
+      });
+
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+
+      if (token) {
+        localStorage.setItem("token", token); // Lưu token vào localStorage
+        window.location.href = "/"; // Chuyển đến trang chính sau khi lưu token
+      }
+    };
+  </script>
 </html>

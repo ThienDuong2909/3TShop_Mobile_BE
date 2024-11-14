@@ -40,7 +40,7 @@ public class AccountService {
             response.setStatus(200);
             response.setMessage("Verify Account success");
         }else {
-            response.setStatus(404);
+            response.setStatus(201);
             response.setMessage("Verify token is not exist");
         }
        return response;
