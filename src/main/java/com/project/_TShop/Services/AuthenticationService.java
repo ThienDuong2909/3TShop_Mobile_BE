@@ -6,6 +6,7 @@ import com.project._TShop.Entities.Role;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.RoleRepository;
 import com.project._TShop.Request.AuthenticationRequest;
+import com.project._TShop.Request.ChangePasswordReq;
 import com.project._TShop.Request.FogotPasswordRequest;
 import com.project._TShop.Request.RegisterRequest;
 import com.project._TShop.Request.ResetPasswordRequest;
@@ -15,10 +16,14 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import net.bytebuddy.utility.RandomString;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.UnsupportedEncodingException;
@@ -145,7 +150,6 @@ public class AuthenticationService {
                     )
             );
         } catch (BadCredentialsException e) {
-            // Nếu thông tin xác thực sai
             response.setStatus(201);
             response.setMessage("Invalid username or password");
             return response;
@@ -155,7 +159,4 @@ public class AuthenticationService {
         response.setToken(jwtToken);
       return response;
     }
-
-
-
 }

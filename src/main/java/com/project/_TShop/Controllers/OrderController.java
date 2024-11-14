@@ -30,7 +30,7 @@ public class OrderController {
     public ResponseEntity<Response> createNewOrder(@RequestBody OrderRequest orderRequest){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        System.out.print("User name là: " + orderRequest);
+        System.out.print("Dữ liệu là: " + orderRequest);
         Response response = orderService.createOrder(username, orderRequest.getIdAddress(), orderRequest.getNote(), orderRequest.getFee(), orderRequest.getOrderRequests());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
