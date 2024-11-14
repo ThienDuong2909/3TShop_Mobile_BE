@@ -66,6 +66,8 @@ public class UserService {
                     .orElseThrow(()-> new RuntimeException("Not found accout"));
                 AccountDTO accountDTO = new AccountDTO();
                 accountDTO.setEmail(account.getEmail());
+                accountDTO.setUsername(account.getUsername());
+                accountDTO.setCreateAt(account.getCreatedAt());
                 response.setAccountDTO(accountDTO);
             } else {
                 response.setStatus(200);
