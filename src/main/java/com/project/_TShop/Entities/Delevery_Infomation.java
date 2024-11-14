@@ -27,10 +27,10 @@ public class Delevery_Infomation {
     @Column(name="phone",columnDefinition = "varchar(10)",nullable = false)
     private String phone;
 
-    @Column(name="address_line_1",columnDefinition = "varchar(65)",nullable = false)
+    @Column(name="address_line_1",columnDefinition = "varchar(255)",nullable = false)
     private String address_line_1;
 
-    @Column(name="address_line_2",columnDefinition = "varchar(65)",nullable = false)
+    @Column(name="address_line_2",columnDefinition = "varchar(255)",nullable = false)
     private String address_line_2;
 
     @Column(name="is_default",nullable = false)
