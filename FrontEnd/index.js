@@ -26,6 +26,7 @@ app.get("/register", (req, res) => {
 app.get("/verify", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "auth/verify-register.html"));
 });
+
 app.get("/tee", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "user/category.html"));
 });
