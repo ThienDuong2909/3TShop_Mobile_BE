@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.project._TShop.DTO.ImagesDTO;
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.DTO.ProductSpecDTO;
 import com.project._TShop.DTO.SpecificationsDTO;
@@ -35,7 +36,8 @@ public class ProductService {
     SizeRepository sizeRepository;
     @Autowired
     SpecificationsRepository specRepo;
-
+    @Autowired
+    ImagesRepository imageRepository;
 
     public Response getAll(){
         Response response = new Response();
@@ -285,6 +287,7 @@ public class ProductService {
         try {
             ProductDTO productDTO = request.getProductDTO();
             List<SpecificationsDTO> specificationsDTOList = request.getSpecificationsDTO();
+            List<ImagesDTO> imagesDTOS = request.getImagesDTOS();
             Category category = categoryRepository.findByCategoryId(productDTO.getCategoryDTO().getCategory_id());
             if (category == null) {
                 response.setStatus(204);
@@ -297,18 +300,26 @@ public class ProductService {
                 sizeRepository.findBySizeId(spec.getSizeDTO().getSize_id())
                         .orElseThrow(()-> new ResourceNotFoundException("Size", "ID", spec.getSizeDTO().getSize_id()));
             }
+
             var product = Product.builder()
                     .name(productDTO.getName())
                     .description(productDTO.getDescription())
                     .price(productDTO.getPrice())
                     .sold(productDTO.getSold())
                     .which_gender(productDTO.getWhich_gender())
-                    .image(productDTO.getImage())
+                    .image(imagesDTOS.get(0).getImage_data())
                     .created_at(new Date())
                     .category_id(category)
                     .status(1)
                     .build();
             Product savedProduct = productRepository.save(product); // Save the Product only after validation
+            for (ImagesDTO imageDTO: imagesDTOS) {
+                var image = Images.builder()
+                        .image_data(imageDTO.getImage_data())
+                        .product(product)
+                        .build();
+                imageRepository.save(image);
+            }
             for (SpecificationsDTO spec : specificationsDTOList) {
                 Color color = colorRepository.findByColorId(spec.getColorDTO().getColor_id())
                         .orElseThrow(()-> new ResourceNotFoundException("Color", "ID", spec.getColorDTO().getColor_id()));
