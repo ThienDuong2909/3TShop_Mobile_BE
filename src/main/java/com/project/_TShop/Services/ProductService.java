@@ -447,6 +447,7 @@ public class ProductService {
             response.setStatus(200);
             response.setProductSpecDTOList(productSpecDTOs);
         } catch (Exception e) {
+            System.out.print(e.toString());
             response.setStatus(500);
             response.setMessage("Server error");
         }

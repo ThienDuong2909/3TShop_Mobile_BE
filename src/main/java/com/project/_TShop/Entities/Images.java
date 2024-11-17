@@ -23,7 +23,7 @@ public class Images {
     
     @Column(name="image_data",columnDefinition = "LONGTEXT",nullable = false)
     private String image_data;
-    @Column(name="feature_vector",columnDefinition = "LONGTEXT",nullable = false)
+    @Column(name="feature_vector",columnDefinition = "LONGTEXT",nullable = true)
     private String feature_vector;
     @ManyToOne
     @JoinColumn(name = "product_id")
