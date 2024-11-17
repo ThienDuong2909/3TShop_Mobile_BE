@@ -437,8 +437,15 @@ public class ProductService {
 //                    .toList();
 
             // Trả về kết quả đã parse
+            List<ProductSpecDTO> productSpecDTOs = resultList.stream()
+                    .map(product -> {
+                        List<Specifications> specs = specRepo
+                            .findByProductAndStatus(product, 1);
+                        return mapToProductSpecDTO(product, specs);
+                    })
+                    .collect(Collectors.toList());
             response.setStatus(200);
-            response.setProductDTOList(Utils.mapProducts(resultList));
+            response.setProductSpecDTOList(productSpecDTOs);
         } catch (Exception e) {
             response.setStatus(500);
             response.setMessage("Server error");
