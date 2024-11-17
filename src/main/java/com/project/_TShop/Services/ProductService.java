@@ -1,15 +1,9 @@
 package com.project._TShop.Services;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.project._TShop.DTO.ImagesDTO;
-import com.project._TShop.DTO.ProductDTO;
-import com.project._TShop.DTO.ProductSpecDTO;
-import com.project._TShop.DTO.SpecificationsDTO;
+import com.project._TShop.DTO.*;
 import com.project._TShop.Entities.*;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
 import com.project._TShop.Repositories.*;
@@ -17,10 +11,14 @@ import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project._TShop.Response.Response;
 import com.project._TShop.Utils.Utils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -402,6 +400,46 @@ public class ProductService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             System.out.println("Lỗi: " + e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+    public Response searchByImage(ImagesDTO imagesDTO) {
+        Response response = new Response();
+        try {
+            String pythonApiUrl = "http://localhost:5000/api/find-similar-images";  // Đảm bảo API Python đang chạy tại địa chỉ này
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> responseFromPy = restTemplate.postForEntity(pythonApiUrl, imagesDTO.getImage_data(), String.class);
+
+            // Sử dụng ObjectMapper để parse JSON trả về thành List<SimilarImage>
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<SimilarImage> similarImages = objectMapper.readValue(responseFromPy.getBody(), objectMapper.getTypeFactory().constructCollectionType(List.class, SimilarImage.class));
+
+            // In dữ liệu đã parse
+            System.out.println("Dữ liệu nhận được từ Python: " + similarImages);
+            List<Product> productDTOAvailable = productRepository.findAvailableProducts();
+
+
+            List<Product> resultList = new ArrayList<>();
+
+            for (SimilarImage e: similarImages) {
+                Product product = productRepository.findById(e.getProduct_id())
+                        .orElseThrow(()-> new ResourceNotFoundException("Product", "ID", e.getProduct_id()));
+                if(productDTOAvailable.contains(product)){
+                    resultList.add(product);
+                }
+            }
+
+//            List<Product> availableSimilarProducts = productDTOAvailable.stream()
+//                    .filter(product -> similarImages.stream()
+//                            .anyMatch(similarImage -> similarImage.getProduct_id() == (product.getProduct_id())))
+//                    .toList();
+
+            // Trả về kết quả đã parse
+            response.setStatus(200);
+            response.setProductDTOList(Utils.mapProducts(resultList));
+        } catch (Exception e) {
             response.setStatus(500);
             response.setMessage("Server error");
         }

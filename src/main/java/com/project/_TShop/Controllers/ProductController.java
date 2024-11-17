@@ -1,14 +1,23 @@
 package com.project._TShop.Controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project._TShop.DTO.ImagesDTO;
 import com.project._TShop.DTO.ProductDTO;
+import com.project._TShop.DTO.SimilarImage;
 import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.ProductService;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/product")
@@ -124,6 +133,11 @@ public class ProductController {
             @RequestParam("name") String product_name
     ){
         Response response = productService.searchByName(product_name);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage(@RequestBody ImagesDTO imagesDTO) {
+        Response response = productService.searchByImage(imagesDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }
