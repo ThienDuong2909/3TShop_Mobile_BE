@@ -2,6 +2,7 @@ package com.project._TShop.Security;
 
 import com.project._TShop.Entities.Account;
 import com.project._TShop.Entities.Auth_Provider;
+import com.project._TShop.Entities.Cart;
 import com.project._TShop.Entities.Role;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.RoleRepository;
