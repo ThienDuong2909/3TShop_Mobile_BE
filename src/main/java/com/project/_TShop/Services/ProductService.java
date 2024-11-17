@@ -446,7 +446,9 @@ public class ProductService {
                     .collect(Collectors.toList());
             response.setStatus(200);
             response.setProductSpecDTOList(productSpecDTOs);
+            //test git
         } catch (Exception e) {
+            System.out.print(e.toString());
             response.setStatus(500);
             response.setMessage("Server error");
         }
