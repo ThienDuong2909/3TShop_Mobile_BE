@@ -1,6 +1,7 @@
 package com.project._TShop.Controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project._TShop.DTO.FeedbackDTO;
 import com.project._TShop.DTO.ImagesDTO;
 import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.DTO.SimilarImage;
@@ -140,4 +141,10 @@ public class ProductController {
         Response response = productService.searchByImage(imagesDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @PostMapping("/feed-back")
+    public ResponseEntity<?> feedBack(@RequestBody FeedbackDTO feedbackDTO) {
+        Response response = productService.feedBack(feedbackDTO);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
 }

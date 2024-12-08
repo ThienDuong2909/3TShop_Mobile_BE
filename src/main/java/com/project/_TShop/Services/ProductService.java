@@ -11,6 +11,9 @@ import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,8 @@ public class ProductService {
     SpecificationsRepository specRepo;
     @Autowired
     ImagesRepository imageRepository;
+    @Autowired
+    UserSearchHistoryRepository searchHistoryRepository;
 
     public Response getAll(){
         Response response = new Response();
@@ -311,6 +316,7 @@ public class ProductService {
                     .status(1)
                     .build();
             Product savedProduct = productRepository.save(product); // Save the Product only after validation
+
             for (ImagesDTO imageDTO: imagesDTOS) {
                 var image = Images.builder()
                         .image_data(imageDTO.getImage_data())
@@ -333,6 +339,15 @@ public class ProductService {
                             .build();
                     specRepo.save(specification);
                 }
+            }
+
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                String apiUrl = "http://localhost:5000/api/train";
+                ResponseEntity<String> pythonResponse = restTemplate.postForEntity(apiUrl, null, String.class);
+                System.out.println("Python API Response: " + pythonResponse.getBody());
+            } catch (Exception ex) {
+                System.err.println("Failed to call Python API: " + ex.getMessage());
             }
             response.setStatus(200);
             response.setMessage("Add new product and specification success");
@@ -408,20 +423,23 @@ public class ProductService {
     public Response searchByImage(ImagesDTO imagesDTO) {
         Response response = new Response();
         try {
-            String pythonApiUrl = "http://localhost:5000/api/find-similar-images";  // Đảm bảo API Python đang chạy tại địa chỉ này
+            UserSearchHistory searchHistory = new UserSearchHistory();
+            searchHistory.setSearchImage(imagesDTO.getImage_data());
+            searchHistory.setSearchedAt(new Date());
+            UserSearchHistory searchHistoried = searchHistoryRepository.save(searchHistory);
+
+            String pythonApiUrl = "http://localhost:5000/api/find-similar-images";
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> responseFromPy = restTemplate.postForEntity(pythonApiUrl, imagesDTO.getImage_data(), String.class);
-
-            // Sử dụng ObjectMapper để parse JSON trả về thành List<SimilarImage>
+            ResponseEntity<String> responseFromPy = restTemplate.
+                    postForEntity(pythonApiUrl, imagesDTO.getImage_data(), String.class);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<SimilarImage> similarImages = objectMapper.readValue(responseFromPy.getBody(), objectMapper.getTypeFactory().constructCollectionType(List.class, SimilarImage.class));
 
-            // In dữ liệu đã parse
-            System.out.println("Dữ liệu nhận được từ Python: " + similarImages);
+            List<SimilarImage> similarImages = objectMapper.readValue(responseFromPy.getBody(),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, SimilarImage.class));
             List<Product> productDTOAvailable = productRepository.findAvailableProducts();
-
-
             List<Product> resultList = new ArrayList<>();
+            System.out.println(similarImages.get(0));
+//            searchHistory.setSimilarityScore(similarImages.get(0).getDistance());
 
             for (SimilarImage e: similarImages) {
                 Product product = productRepository.findById(e.getProduct_id())
@@ -430,13 +448,6 @@ public class ProductService {
                     resultList.add(product);
                 }
             }
-
-//            List<Product> availableSimilarProducts = productDTOAvailable.stream()
-//                    .filter(product -> similarImages.stream()
-//                            .anyMatch(similarImage -> similarImage.getProduct_id() == (product.getProduct_id())))
-//                    .toList();
-
-            // Trả về kết quả đã parse
             List<ProductSpecDTO> productSpecDTOs = resultList.stream()
                     .map(product -> {
                         List<Specifications> specs = specRepo
@@ -445,10 +456,51 @@ public class ProductService {
                     })
                     .collect(Collectors.toList());
             response.setStatus(200);
+            response.setMessage(searchHistoried.getSearchId().toString());
             response.setProductSpecDTOList(productSpecDTOs);
             //test git
         } catch (Exception e) {
             System.out.print(e.toString());
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response feedBack(FeedbackDTO feedbackDTO) {
+        Response response = new Response();
+        try {
+            UserSearchHistory searchHistory = searchHistoryRepository.findById(feedbackDTO.getSearchId())
+                    .orElseThrow(()-> new ResourceNotFoundException("SearchHistory", "ID", feedbackDTO.getSearchId()));
+            searchHistory.setFeedback(feedbackDTO.isFeedback());
+            String pythonApiUrl = "http://localhost:5000/api/user-feedback";  // Update with your actual Python API URL
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("image_data", searchHistory.getSearchImage());
+            payload.put("product_id", feedbackDTO.getProduct_id());
+            payload.put("feedback", feedbackDTO.isFeedback());
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(payload, headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> responseFromPy = restTemplate.postForEntity(
+                    pythonApiUrl,  // The Python API URL
+                    requestEntity, // The HttpEntity containing payload and headers
+                    String.class   // Response type
+            );
+            // Handle response from Python API
+            if (responseFromPy.getStatusCode().is2xxSuccessful()) {
+                response.setStatus(200);
+                response.setMessage("Feedback sent successfully");
+            } else {
+                response.setStatus(responseFromPy.getStatusCodeValue());
+                response.setMessage("Failed to send feedback");
+            }
+
+
+        }catch (Exception e) {
             response.setStatus(500);
             response.setMessage("Server error");
         }

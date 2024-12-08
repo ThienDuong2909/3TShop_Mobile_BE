@@ -34,6 +34,7 @@ public class Response {
     private SizeDTO sizeDTO;
     private SpecificationsDTO specificationsDTO;
     private OrderResponse orderResponse;
+    private float distance;
 
     private List<UserDTO> userDTOList;
     private List<AccountDTO> accountDTOList;
