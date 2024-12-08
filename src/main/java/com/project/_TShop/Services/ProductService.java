@@ -340,15 +340,29 @@ public class ProductService {
                     specRepo.save(specification);
                 }
             }
-
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                String apiUrl = "http://localhost:5000/api/train";
-                ResponseEntity<String> pythonResponse = restTemplate.postForEntity(apiUrl, null, String.class);
-                System.out.println("Python API Response: " + pythonResponse.getBody());
-            } catch (Exception ex) {
-                System.err.println("Failed to call Python API: " + ex.getMessage());
-            }
+            productRepository.flush();
+            imageRepository.flush();
+            specRepo.flush();
+//            try {
+//                RestTemplate restTemplate = new RestTemplate();
+//                String apiUrl = "http://localhost:5000/api/train";
+//                ResponseEntity<String> pythonResponse = restTemplate.postForEntity(apiUrl, null, String.class);
+//                System.out.println("Python API Response: " + pythonResponse.getBody());
+//            } catch (Exception ex) {
+//                System.err.println("Failed to call Python API: " + ex.getMessage());
+//            }
+//            response.setStatus(200);
+//            response.setMessage("Add new product and specification success");
+            new Thread(() -> {
+                try {
+                    RestTemplate restTemplate = new RestTemplate();
+                    String apiUrl = "http://localhost:5000/api/train";
+                    ResponseEntity<String> pythonResponse = restTemplate.postForEntity(apiUrl, null, String.class);
+                    System.out.println("Python API Response: " + pythonResponse.getBody());
+                } catch (Exception ex) {
+                    System.err.println("Failed to call Python API: " + ex.getMessage());
+                }
+            }).start();
             response.setStatus(200);
             response.setMessage("Add new product and specification success");
         }catch (ResourceNotFoundException e){
@@ -479,6 +493,9 @@ public class ProductService {
             payload.put("image_data", searchHistory.getSearchImage());
             payload.put("product_id", feedbackDTO.getProduct_id());
             payload.put("feedback", feedbackDTO.isFeedback());
+            System.out.println("product_id"+ feedbackDTO.getProduct_id());
+            System.out.println("image_data"+ searchHistory.getSearchImage());
+            System.out.println("feedback"+ feedbackDTO.isFeedback());
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(payload, headers);
 
