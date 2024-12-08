@@ -472,7 +472,9 @@ public class ProductService {
             response.setStatus(200);
             response.setMessage(searchHistoried.getSearchId().toString());
             response.setProductSpecDTOList(productSpecDTOs);
+            //test git
         } catch (Exception e) {
+            System.out.print(e.toString());
             response.setStatus(500);
             response.setMessage("Server error");
         }
