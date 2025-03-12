@@ -76,7 +76,6 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         response.setStatus(200);
         response.setToken(jwtToken);
-
         return response;
     }
 
@@ -104,7 +103,7 @@ public class AuthenticationService {
             accountRepo.save(optionalAccount.get());
             emailService.sendEmailToResetPassword(optionalAccount.get(), req);
             response.setStatus(200);
-            response.setMessage("update Reset Password Token and Send mail success");
+            response.setMessage("Update Reset Password Token and Send mail success");
         } else {
             response.setStatus(202);
             response.setMessage("Account not found");
@@ -122,7 +121,7 @@ public class AuthenticationService {
             optionalAccount.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
             accountRepo.save(optionalAccount.get());
             response.setStatus(200);
-            response.setMessage("update Password success");
+            response.setMessage("Update Password success");
         } else {
             response.setStatus(201);
             response.setMessage("Account not found");
