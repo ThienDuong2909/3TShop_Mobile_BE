@@ -39,6 +39,8 @@ public class Account implements UserDetails {
 
     @Column(name="registrationToken",columnDefinition = "varchar(50)")
     private String registrationToken;
+    @Column(name = "registration_token_expiry")
+    private Date registrationTokenExpiry;
 
     @Column(name="auth_provider",columnDefinition = "varchar(20)",nullable = false)
     private String auth_provider;

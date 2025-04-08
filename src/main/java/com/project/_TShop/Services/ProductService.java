@@ -293,7 +293,7 @@ public class ProductService {
             List<ImagesDTO> imagesDTOS = request.getImagesDTOS();
             Category category = categoryRepository.findByCategoryId(productDTO.getCategoryDTO().getCategory_id());
             if (category == null) {
-                response.setStatus(204);
+                response.setStatus(201);
                 response.setMessage("Category not found");
                 return response;
             }

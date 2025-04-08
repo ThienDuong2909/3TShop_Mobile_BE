@@ -1,11 +1,7 @@
 package com.project._TShop.Controllers;
 
 import com.project._TShop.Entities.Account;
-import com.project._TShop.Request.AuthenticationRequest;
-import com.project._TShop.Request.ChangePasswordReq;
-import com.project._TShop.Request.FogotPasswordRequest;
-import com.project._TShop.Request.RegisterRequest;
-import com.project._TShop.Request.ResetPasswordRequest;
+import com.project._TShop.Request.*;
 import com.project._TShop.Response.AuthenticationResponse;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.AccountService;
@@ -45,6 +41,18 @@ public class AuthenticationController {
         Response response = authenticationService.register(request, req);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @PostMapping("/register-mobile")
+    public ResponseEntity<?> registerMobile(@RequestBody RegisterRequest request
+    ) throws MessagingException, UnsupportedEncodingException {
+        Response response = authenticationService.registerMobile(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PostMapping("/verify-register-token")
+    public ResponseEntity<?> verifyRegisterMobile(@RequestBody VerifyRegisterTokenRequest request
+    ) throws MessagingException, UnsupportedEncodingException {
+        Response response = authenticationService.verifyRegisterMobile(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
     @GetMapping("/verify")
     public ResponseEntity<?> verifyAccount(@RequestParam("code") String code) {
         Response response = accountService.isValidRegistrationToken(code);
@@ -71,10 +79,9 @@ public class AuthenticationController {
         Response response = authenticationService.authenticate(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-//    @PostMapping("/google/callback")
-//    public ResponseEntity<Map<String, String>> googleCallback(@RequestParam String token) {
-//        Map<String, String> response = new HashMap<>();
-//        response.put("token", token);
-//        return ResponseEntity.ok(response);
-//    }
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
+        Response response = authenticationService.loginByGoogle(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

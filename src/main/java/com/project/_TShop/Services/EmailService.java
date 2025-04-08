@@ -45,7 +45,25 @@ public class EmailService {
 
         mailSender.send(message);
     }
+    public void sendOtpEmail(Account user) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+        String subject = "Xác nhận đăng ký tài khoản";
+        String content = "<h3>Xin chào " + user.getUsername() + ",</h3>" +
+                "<p>Vui lòng sử dụng mã OTP dưới đây để xác nhận đăng ký tài khoản:</p>" +
+                "<h2>" + user.getRegistrationToken() + "</h2>" +
+                "<p>Mã này có hiệu lực trong 10 phút.</p>" +
+                "<p>Nếu bạn không yêu cầu đăng ký, vui lòng bỏ qua email này.</p>" +
+                "<p>Trân trọng,<br>Đội ngũ 3TShop</p>";
+
+        helper.setTo(user.getEmail());
+        helper.setSubject(subject);
+        helper.setText(content, true); // true để hỗ trợ HTML
+        helper.setFrom("no-reply@3tshop.com", "3TShop");
+
+        mailSender.send(message);
+    }
     public void sendEmailToResetPassword(Account account, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
         String siteURL = getSiteURL(req);
         MimeMessage message = mailSender.createMimeMessage();
