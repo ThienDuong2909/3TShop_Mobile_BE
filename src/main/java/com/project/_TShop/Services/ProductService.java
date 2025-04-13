@@ -181,7 +181,7 @@ public class ProductService {
         List<ProductSpecDTO.SpecificationInfo> specInfoList = specs.stream()
             .map(spec -> ProductSpecDTO.SpecificationInfo.builder()
                 .size(spec.getSize_id().getName())
-                .color(spec.getColor().getName())
+                .color(spec.getColor().getHex())
                 .quantity(spec.getQuantity())
                 .build())
             .collect(Collectors.toList());
@@ -518,6 +518,33 @@ public class ProductService {
 
 
         }catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response getByIds(List<String> ids) {
+        Response response = new Response();
+        try {
+            List<Product> resultList = new ArrayList<>();
+            for (String id : ids) {
+                Product product = productRepository.findById(Integer.parseInt(id))
+                        .orElseThrow(()-> new ResourceNotFoundException("Product", "id", id));
+                if (product != null) {
+                    resultList.add(product);
+                }
+            }
+            List<ProductSpecDTO> productSpecDTOs = resultList.stream()
+                    .map(product -> {
+                        List<Specifications> specs = specRepo
+                                .findByProductAndStatus(product, 1);
+                        return mapToProductSpecDTO(product, specs);
+                    })
+                    .collect(Collectors.toList());
+            response.setStatus(200);
+            response.setProductSpecDTOList(productSpecDTOs);
+        }catch (Exception e){
             response.setStatus(500);
             response.setMessage("Server error");
         }

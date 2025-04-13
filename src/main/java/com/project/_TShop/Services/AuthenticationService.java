@@ -189,16 +189,39 @@ public class AuthenticationService {
         }
         return response;
     }
+    public Response updateResetPasswordTokenMobile(FogotPasswordRequest request, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("Mail: "+ request.getEmail());
+        Response response = new Response();
+        if(!isEmailExistAndEnable(request)){
+            response.setStatus(201);
+            response.setMessage("No registration found for this email, or the account has not been verified.");
+        }
+        Optional<Account> optionalAccount = accountRepo.findByEmail(request.getEmail());
+        if (optionalAccount.isPresent()) {
+            optionalAccount.get().setResetPasswordToken(RandomString.make(50));
+            accountRepo.save(optionalAccount.get());
+            emailService.sendEmailToResetPasswordMobile(optionalAccount.get(), req);
+            response.setStatus(200);
+            response.setMessage("Update Reset Password Token and Send mail success");
+        } else {
+            response.setStatus(202);
+            response.setMessage("Account not found");
+        }
+        return response;
+    }
 
     public Response updatePassword(ResetPasswordRequest request) {
-        System.out.println("New Password: "+request.getNewPassword());
+        System.out.println("New Password: " + request.getNewPassword());
+        System.out.println("request token: " + request.getToken());
+
         Response response = new Response();
-        Optional <Account> optionalAccount = accountRepo.findByResetPasswordToken(request.getToken());
-        System.out.println(optionalAccount);
+        Optional<Account> optionalAccount = accountRepo.findByResetPasswordToken(request.getToken());
+        System.out.println("Account found: " + optionalAccount);
         if (optionalAccount.isPresent()) {
-            optionalAccount.get().setResetPasswordToken(null);
-            optionalAccount.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
-            accountRepo.save(optionalAccount.get());
+            Account account = optionalAccount.get();
+            account.setResetPasswordToken(null);
+            account.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            accountRepo.save(account);
             response.setStatus(200);
             response.setMessage("Update Password success");
         } else {

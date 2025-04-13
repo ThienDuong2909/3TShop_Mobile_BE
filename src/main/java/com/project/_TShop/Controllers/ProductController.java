@@ -7,6 +7,7 @@ import com.project._TShop.DTO.ProductDTO;
 import com.project._TShop.DTO.SimilarImage;
 import com.project._TShop.Request.ProductWithSpecificationsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,6 +103,13 @@ public class ProductController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("get-by-ids")
+    public ResponseEntity<Response> getByIds(
+            @RequestParam("ids") List<String> ids
+    ){
+        Response response = productService.getByIds(ids);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
     @GetMapping("get-by-category-id/{id}")
     public ResponseEntity<Response> getByCategory(
             @PathVariable("id") Integer id
@@ -109,6 +117,8 @@ public class ProductController {
         Response response = productService.getByCategory(id);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+
 
     @GetMapping("get-by-name/{name}")
     public ResponseEntity<Response> getByName(@PathVariable("name") String name) {

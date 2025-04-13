@@ -85,4 +85,26 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
+    public void sendEmailToResetPasswordMobile(Account account, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setFrom("khinthij@gmail.com", "3TSHOP");
+        helper.setTo(account.getEmail());
+
+        // Tạo link trung gian HTTPS
+        String resetToken = account.getResetPasswordToken();
+        String webLink = "https://presently-prepared-albacore.ngrok-free.app/api/v1/auth/reset-password-gate?token=" + resetToken; // Thay bằng domain thật của bạn
+
+        String subject = "Đặt lại mật khẩu";
+        String content = "<p>Xin chào,</p>"
+                + "<p>Nhấn vào đường dẫn bên dưới để đặt lại mật khẩu trong ứng dụng:</p>"
+                + "<p><b><a href=\"" + webLink + "\">Đặt lại mật khẩu</a></b></p>"
+                + "<p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>";
+
+        helper.setSubject(subject);
+        helper.setText(content, true);
+
+        mailSender.send(message);
+    }
 }

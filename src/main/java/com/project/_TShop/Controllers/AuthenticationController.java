@@ -65,6 +65,28 @@ public class AuthenticationController {
         Response response = authenticationService.updateResetPasswordToken(request, req);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @PostMapping("/forgot-password-mobile")
+    public ResponseEntity<?> forgotPasswordMobile(
+            @RequestBody FogotPasswordRequest request, HttpServletRequest req
+    ) throws MessagingException, UnsupportedEncodingException {
+        Response response = authenticationService.updateResetPasswordTokenMobile(request, req);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("/reset-password-gate")
+    public ResponseEntity<?> redirectToApp(@RequestParam("token") String token) {
+        String deepLink = "myapp://reset-password?token=" + token;
+        String html = "<html><body>"
+                + "<h3>Nhấn nút dưới đây để mở ứng dụng:</h3>"
+                + "<a href=\"" + deepLink + "\"><button>Mở ứng dụng</button></a>"
+                + "<p>Hoặc sao chép link: " + deepLink + "</p>"
+                + "<script>"
+                + "window.location.href = '" + deepLink + "';"
+                + "</script>"
+                + "</body></html>";
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/html")
+                .body(html);
+    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPasswordForm(@RequestBody ResetPasswordRequest request){
