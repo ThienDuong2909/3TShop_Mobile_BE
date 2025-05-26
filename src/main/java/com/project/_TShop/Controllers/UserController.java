@@ -56,4 +56,12 @@ public class UserController {
        Response response = accountService.changePassword(request);
        return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+    @PostMapping("/statistics")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getStatistics(@RequestBody ChangePasswordReq request){
+        System.out.print("ĐỔi mật khẩu" + request);
+        Response response = accountService.changePassword(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

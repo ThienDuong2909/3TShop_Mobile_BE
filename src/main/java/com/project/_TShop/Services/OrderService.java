@@ -281,6 +281,7 @@ public class OrderService {
                         orderResponses.add(orderResponse);
                     }
                 }
+                System.out.print("orderResponses: "+orderResponses.size());
     
                 if (!orderResponses.isEmpty()) {
                     response.setStatus(200);

@@ -309,7 +309,7 @@ public class AuthenticationService {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     new NetHttpTransport(), JacksonFactory.getDefaultInstance())
-                    .setAudience(Collections.singletonList("329726609553-0v2id8560hjcs1c30ho1fbo7lkt2nj4b.apps.googleusercontent.com")) // Thay YOUR_GOOGLE_CLIENT_ID bằng Web Client ID
+                    .setAudience(Collections.singletonList("329726609553-0v2id8560hjcs1c30ho1fbo7lkt2nj4b.apps.googleusercontent.com"))
                     .build();
 
             GoogleIdToken googleIdToken = verifier.verify(idToken);
