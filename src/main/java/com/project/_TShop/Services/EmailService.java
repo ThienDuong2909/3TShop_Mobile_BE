@@ -60,7 +60,7 @@ public class EmailService {
         helper.setTo(user.getEmail());
         helper.setSubject(subject);
         helper.setText(content, true); // true để hỗ trợ HTML
-        helper.setFrom("no-reply@3tshop.com", "3TShop");
+        helper.setFrom("thienplpp965@gmail.com", "3TShop");
 
         mailSender.send(message);
     }
@@ -89,7 +89,7 @@ public class EmailService {
     public void sendEmailToResetPasswordMobile(Account account, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("khinthij@gmail.com", "3TSHOP");
+        helper.setFrom("thienplpp965@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
 
         // Tạo link trung gian HTTPS

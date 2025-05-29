@@ -3,6 +3,7 @@ package com.project._TShop.Security;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.CartRepository;
 import com.project._TShop.Repositories.RoleRepository;
+import com.project._TShop.Services.AuthenticationFactory;
 import com.project._TShop.Services.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,9 @@ public class SecurityConfig {
     private final RoleRepository roleRepo;
     private final CartRepository cartRepository;
     private final JwtService jwtService;
+    private final AuthenticationFactory authenticationFactory;
+
+
 //    private final LogoutHandler logoutHandler;
 
     @Bean
@@ -58,7 +62,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService()))
-                        .successHandler(new GoogleOAuth2SuccessHandler(accountRepo, jwtService, roleRepo, cartRepository))
+                        .successHandler(new GoogleOAuth2SuccessHandler(accountRepo, jwtService, roleRepo, cartRepository, authenticationFactory ))
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

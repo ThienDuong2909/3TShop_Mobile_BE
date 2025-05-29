@@ -267,6 +267,8 @@ public class AuthenticationService {
     public Response loginByGoogle(Map<String, String> request) {
         Response response = new Response();
         String idToken = request.get("idToken");
+        System.out.println("idToken: "+idToken);
+
 
         GoogleIdToken.Payload payload = verifyGoogleIdToken(idToken);
         if (payload == null) {

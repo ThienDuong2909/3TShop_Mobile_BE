@@ -5,6 +5,7 @@ import com.project._TShop.Request.*;
 import com.project._TShop.Response.AuthenticationResponse;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.AccountService;
+import com.project._TShop.Services.AuthenticationFactory;
 import com.project._TShop.Services.AuthenticationService;
 import com.project._TShop.Services.EmailService;
 import jakarta.mail.MessagingException;
@@ -32,6 +33,7 @@ public class AuthenticationController {
     private final AccountService accountService;
 
     private final EmailService emailService;
+    private final AuthenticationFactory authenticationFactory;
 
 
     @PostMapping("/register")
@@ -98,7 +100,7 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        Response response = authenticationService.authenticate(request);
+        Response response = authenticationFactory.getStrategy("USERNAME_PASSWORD").authenticate(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @PostMapping("/google-login")
