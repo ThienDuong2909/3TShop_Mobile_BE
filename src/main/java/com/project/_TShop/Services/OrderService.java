@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.project._TShop.DTO.OrderDTO;
+import com.project._TShop.DTO.OrderStatusNumberDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
 import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
@@ -252,6 +253,22 @@ public class OrderService {
     
             List<Order> orders = orderRepository.findAllByUser(user);
             if (!orders.isEmpty()) {
+                List<OrderStatusNumberDTO> orderStatusNumberDTOList = new ArrayList<>();
+                for (int i = 0; i <= 3; i++) {
+                    OrderStatusNumberDTO orderStatusNumberDTO = new OrderStatusNumberDTO();
+                    orderStatusNumberDTO.setStatus(String.valueOf(i));
+                    int count = 0;
+                    for (Order order : orders) {
+                        Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                                .orElseThrow(() -> new RuntimeException("Order status not found"));
+                        if (orderStatus.getStatus() == i) {
+                            count++;
+                        }
+                    }
+                    orderStatusNumberDTO.setNumber(count);
+                    orderStatusNumberDTOList.add(orderStatusNumberDTO);
+                }
+                response.setOrderStatusNumberDTOList(orderStatusNumberDTOList);
                 List<OrderResponse> orderResponses = new ArrayList<>();
     
                 for (Order order : orders) {
@@ -281,11 +298,11 @@ public class OrderService {
                         orderResponses.add(orderResponse);
                     }
                 }
-                System.out.print("orderResponses: "+orderResponses.size());
     
                 if (!orderResponses.isEmpty()) {
                     response.setStatus(200);
                     response.setOrderResponses(orderResponses);
+                    response.setOrderStatusNumberDTOList(orderStatusNumberDTOList);
                 } else {
                     response.setStatus(202);
                     response.setMessage("No orders with the specified status");
