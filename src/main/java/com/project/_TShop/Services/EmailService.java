@@ -28,7 +28,7 @@ public class EmailService {
         String siteURL = getSiteURL(req);
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("khinthij@gmail.com", "3TSHOP");
+        helper.setFrom("thienplpp965@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
 //        String verifyURL = siteURL + "/verify?code=" + account.getRegistrationToken();
         String verifyURL = "http://localhost:3003/verify?code=" + account.getRegistrationToken();
@@ -68,7 +68,7 @@ public class EmailService {
         String siteURL = getSiteURL(req);
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("khinthij@gmail.com", "3TSHOP");
+        helper.setFrom("thienplpp965@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
 //        String verifyURL = siteURL + "/reset-password?code=" + account.getResetPasswordToken();
         String verifyURL = "http://localhost:3003/reset-password?code=" + account.getResetPasswordToken();

@@ -1,12 +1,10 @@
 package com.project._TShop.Services;
 
-import com.project._TShop.Entities.Account;
-import com.project._TShop.Entities.Auth_Provider;
-import com.project._TShop.Entities.Cart;
-import com.project._TShop.Entities.Role;
+import com.project._TShop.Entities.*;
 import com.project._TShop.Repositories.AccountRepository;
 import com.project._TShop.Repositories.CartRepository;
 import com.project._TShop.Repositories.RoleRepository;
+import com.project._TShop.Repositories.UserRepository;
 import com.project._TShop.Request.ChangePasswordReq;
 import com.project._TShop.Request.RegisterRequest;
 import com.project._TShop.Response.AuthenticationResponse;
@@ -30,6 +28,7 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepo;
 
+
     public Response isValidRegistrationToken(String code) {
         Response response = new Response();
         Optional<Account> accountOptional = accountRepo.findByRegistrationToken(code);
@@ -38,6 +37,8 @@ public class AccountService {
             var cart = Cart.builder()
                             .account(accountOptional.get())
                             .build();
+
+
             accountRepo.save(accountOptional.get());
             cartRepo.save(cart);
             response.setStatus(200);
