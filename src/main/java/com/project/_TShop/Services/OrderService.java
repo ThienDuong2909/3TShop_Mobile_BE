@@ -40,6 +40,7 @@ import com.project._TShop.Repositories.SpecificationsRepository;
 import com.project._TShop.Repositories.UserRepository;
 import com.project._TShop.Request.OrderDetailRequest;
 import com.project._TShop.Response.Response;
+import com.project._TShop.Utils.AppLogger;
 import com.project._TShop.Utils.Utils;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -109,7 +110,7 @@ public class OrderService {
             order.setTotal_price(totalPrice);
             orderRepository.save(order);
             Order_Status orderStatus = new Order_Status(1, date, order, note);
-            System.out.println("order-status: " +orderStatus);
+            AppLogger.getInstance().info("order-status: " +orderStatus);
             orderStatusRepository.save(orderStatus);
 
             for (OrderDetailRequest orderRequest : orderRequests) {
@@ -134,7 +135,7 @@ public class OrderService {
             response.setStatus(202);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
-            System.out.print("Lỗi" + e.toString());
+            AppLogger.getInstance().equals("Error "+ e.toString());
             response.setMessage("Error: " + e.toString());
             response.setStatus(500);
             e.printStackTrace();
