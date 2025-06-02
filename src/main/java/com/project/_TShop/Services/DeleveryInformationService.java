@@ -32,6 +32,7 @@ public class DeleveryInformationService {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
+            System.out.println("username"+username);
             Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
             User user = userRepository.findByAccount(account)
@@ -47,6 +48,7 @@ public class DeleveryInformationService {
         }catch(RuntimeException e){
             response.setStatus(400);
             response.setMessage(e.getMessage());
+            System.out.println("lỗi "+ e.getMessage());
         }
         catch (Exception e) {
             response.setStatus(500);

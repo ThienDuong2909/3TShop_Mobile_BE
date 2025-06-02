@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.project._TShop.DTO.OrderDTO;
-import com.project._TShop.DTO.OrderStatusNumberDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
 import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
@@ -41,6 +40,7 @@ import com.project._TShop.Repositories.SpecificationsRepository;
 import com.project._TShop.Repositories.UserRepository;
 import com.project._TShop.Request.OrderDetailRequest;
 import com.project._TShop.Response.Response;
+import com.project._TShop.Utils.AppLogger;
 import com.project._TShop.Utils.Utils;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -110,7 +110,7 @@ public class OrderService {
             order.setTotal_price(totalPrice);
             orderRepository.save(order);
             Order_Status orderStatus = new Order_Status(1, date, order, note);
-            System.out.println("order-status: " +orderStatus);
+            AppLogger.getInstance().info("order-status: " +orderStatus);
             orderStatusRepository.save(orderStatus);
 
             for (OrderDetailRequest orderRequest : orderRequests) {
@@ -135,7 +135,7 @@ public class OrderService {
             response.setStatus(202);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
-            System.out.print("Lỗi" + e.toString());
+            AppLogger.getInstance().equals("Error "+ e.toString());
             response.setMessage("Error: " + e.toString());
             response.setStatus(500);
             e.printStackTrace();
@@ -253,22 +253,6 @@ public class OrderService {
     
             List<Order> orders = orderRepository.findAllByUser(user);
             if (!orders.isEmpty()) {
-                List<OrderStatusNumberDTO> orderStatusNumberDTOList = new ArrayList<>();
-                for (int i = 0; i <= 3; i++) {
-                    OrderStatusNumberDTO orderStatusNumberDTO = new OrderStatusNumberDTO();
-                    orderStatusNumberDTO.setStatus(String.valueOf(i));
-                    int count = 0;
-                    for (Order order : orders) {
-                        Order_Status orderStatus = orderStatusRepository.findByOrder(order)
-                                .orElseThrow(() -> new RuntimeException("Order status not found"));
-                        if (orderStatus.getStatus() == i) {
-                            count++;
-                        }
-                    }
-                    orderStatusNumberDTO.setNumber(count);
-                    orderStatusNumberDTOList.add(orderStatusNumberDTO);
-                }
-                response.setOrderStatusNumberDTOList(orderStatusNumberDTOList);
                 List<OrderResponse> orderResponses = new ArrayList<>();
     
                 for (Order order : orders) {
@@ -302,7 +286,6 @@ public class OrderService {
                 if (!orderResponses.isEmpty()) {
                     response.setStatus(200);
                     response.setOrderResponses(orderResponses);
-                    response.setOrderStatusNumberDTOList(orderStatusNumberDTOList);
                 } else {
                     response.setStatus(202);
                     response.setMessage("No orders with the specified status");

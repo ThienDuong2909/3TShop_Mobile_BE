@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT * FROM Product ORDER BY created_at DESC LIMIT 10", nativeQuery = true)
     List<Product> findTop10ByCreatedAtDescNative();
 
-    @Query(value = "SELECT * FROM Product WHERE category_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM product WHERE category_id = ?1", nativeQuery = true)
     List<Product> findByCategory(Integer id);
 
 

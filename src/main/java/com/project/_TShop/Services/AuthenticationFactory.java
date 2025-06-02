@@ -13,10 +13,13 @@ public class AuthenticationFactory {
 
     private final Map<String, AuthenticationStrategy> strategies;
 
+
+    // constructor
     @Autowired
     public AuthenticationFactory(List<AuthenticationStrategy> strategyList) {
         strategies = new HashMap<>();
         for (AuthenticationStrategy strategy : strategyList) {
+            System.out.println("strategy.getClass(): "+ strategy.getClass().getAnnotation(Component.class).value());
             strategies.put(strategy.getClass().getAnnotation(Component.class).value(), strategy);
         }
     }
