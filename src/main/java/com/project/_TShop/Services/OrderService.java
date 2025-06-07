@@ -271,7 +271,7 @@ public class OrderService {
             // Đảm bảo tất cả trạng thái 1, 2, 3 đều có trong danh sách
             // Trong OrderService.java
             List<OrderStatusNumberDTO> orderStatusNumberList = new ArrayList<>();
-            for (int i = 1; i <= 3; i++) {
+            for (int i = 1; i <= 4; i++) {
                 OrderStatusNumberDTO dto = new OrderStatusNumberDTO();
                 dto.setStatus(String.valueOf(i));
                 dto.setNumber(statusCountMap.getOrDefault(i, 0));
@@ -323,4 +323,58 @@ public class OrderService {
         }
         return response;
     }
+
+    public Response getOrderById(int orderId) {
+        Response response = new Response();
+        try {
+            // Lấy đơn hàng
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", orderId));
+
+            // Lấy thông tin trạng thái đơn hàng
+            Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order status", "Order ID", orderId));
+
+            // Lấy thông tin chi tiết đơn hàng
+            List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                    .orElseThrow(() -> new ResourceNotFoundException("OrderDetail", "Order ID", orderId));
+
+            // Chuyển sang DTO
+            List<Order_DetailDTO> orderDetailDTOs = orderDetails.stream()
+                    .map(Utils::mapOrderDetail)
+                    .collect(Collectors.toList());
+
+            // Lấy thông tin người dùng
+            User user = userRepository.findById(order.getUser_id().getUser_id())
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "ID", order.getUser_id().getUser_id()));
+
+            // Tạo đối tượng phản hồi
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderDetailDTOS(orderDetailDTOs)
+                    .order_id(order.getOrder_id())
+                    .address_line_1(order.getAddress_line_1())
+                    .address_line_2(order.getAddress_line_2())
+                    .name(order.getName())
+                    .phone(order.getPhone())
+                    .total_price(order.getTotal_price())
+                    .date(order.getDate())
+                    .note(orderStatus.getNote())
+                    .userDTO(Utils.mapUser(user))
+                    .orderStatusDTO(Utils.mapOrder_Status(orderStatus))
+                    .build();
+
+            response.setStatus(200);
+            response.setMessage("Order retrieved successfully");
+            response.setOrderResponse(orderResponse);
+
+        } catch (ResourceNotFoundException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Server error: " + e.getMessage());
+        }
+        return response;
+    }
+
 }  

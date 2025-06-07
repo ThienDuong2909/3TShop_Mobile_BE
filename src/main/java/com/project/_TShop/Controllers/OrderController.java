@@ -75,6 +75,12 @@ public class OrderController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> changeStatus(@PathVariable("id") int id){
+        Response response = orderService.getOrderById(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @GetMapping("/get-by-user/{status}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Response> getByUser(@PathVariable("status") int status){
