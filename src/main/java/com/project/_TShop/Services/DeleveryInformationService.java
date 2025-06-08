@@ -75,6 +75,7 @@ public class DeleveryInformationService {
             if (delevery_InformationDTO.is_default()) {                
                  Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
                 delevery_InfomationDefault.set_default(false);
+                deleveryInformationRepository.save(delevery_InfomationDefault);
             }
             deleveryInformationRepository.save(delevery_Infomation);
             response.setStatus(200);
@@ -102,7 +103,9 @@ public class DeleveryInformationService {
             delevery_Infomation.setAddress_line_2(delevery_InformationDTO.getAddress_line_2());
             delevery_Infomation.setName(delevery_InformationDTO.getName());
             delevery_Infomation.setPhone(delevery_InformationDTO.getPhone());
+            System.out.println("default"+ delevery_InformationDTO.is_default());
             delevery_Infomation.set_default(delevery_InformationDTO.is_default());
+            System.out.println("default entity"+ delevery_Infomation.is_default());
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
@@ -112,9 +115,12 @@ public class DeleveryInformationService {
             User user = userRepository.findByAccount(account)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+            System.out.println("user"+user);
+
             if (delevery_InformationDTO.is_default()) {                
                  Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
                 delevery_InfomationDefault.set_default(false);
+                deleveryInformationRepository.save(delevery_InfomationDefault);
             }
 
 
