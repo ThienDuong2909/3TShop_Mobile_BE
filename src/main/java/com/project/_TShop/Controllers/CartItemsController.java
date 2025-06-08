@@ -31,6 +31,13 @@ public class CartItemsController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> updateQuantity(@PathVariable("id") Integer id, @RequestBody CartItemRequest cartItemRequest){
+        Response response = cartItemsService.updateQuantity(id, cartItemRequest.getQuantity());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     @GetMapping("/get-by-account")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Response> getByAccount(){

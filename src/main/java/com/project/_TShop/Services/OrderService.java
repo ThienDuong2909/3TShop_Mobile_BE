@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.project._TShop.DTO.OrderDTO;
+import com.project._TShop.DTO.OrderStatusNumberDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
 import com.project._TShop.DTO.Order_StatusDTO;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
@@ -244,63 +248,133 @@ public class OrderService {
     public Response getOrderByStatus(int status) {
         Response response = new Response();
         try {
+            // Lấy thông tin người dùng từ Authentication
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             Account account = accountRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("Account not found"));
             User user = userRepository.findByAccount(account)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-    
+
+            // Lấy tất cả đơn hàng của người dùng
             List<Order> orders = orderRepository.findAllByUser(user);
-            if (!orders.isEmpty()) {
-                List<OrderResponse> orderResponses = new ArrayList<>();
-    
-                for (Order order : orders) {
-                    Order_Status orderStatus = orderStatusRepository.findByOrder(order)
-                            .orElseThrow(() -> new RuntimeException("Order status not found"));
-                    
-                    if (orderStatus.getStatus() == status) {
-                        List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
-                                .orElseThrow(() -> new RuntimeException("Not found order detail!"));
-                        List<Order_DetailDTO> orderDetailDTOs = orderDetails.stream()
-                                .map(Utils::mapOrderDetail)
-                                .toList();
-    
-                        OrderResponse orderResponse = OrderResponse.builder()
-                                .orderDetailDTOS(orderDetailDTOs)
-                                .order_id(order.getOrder_id())
-                                .address_line_1(order.getAddress_line_1())
-                                .address_line_2(order.getAddress_line_2())
-                                .name(order.getName())
-                                .phone(order.getPhone())
-                                .note(orderStatus.getNote())
-                                .total_price(order.getTotal_price())
-                                .date(order.getDate())
-                                .userDTO(Utils.mapUser(user))
-                                .orderStatusDTO(Utils.mapOrder_Status(orderStatus))
-                                .build();
-                        orderResponses.add(orderResponse);
-                    }
-                }
-    
-                if (!orderResponses.isEmpty()) {
-                    response.setStatus(200);
-                    response.setOrderResponses(orderResponses);
-                } else {
-                    response.setStatus(202);
-                    response.setMessage("No orders with the specified status");
-                }
-            } else {
-                response.setStatus(202);
-                response.setMessage("No orders found");
+
+            // Đếm số lượng đơn hàng theo trạng thái
+            Map<Integer, Integer> statusCountMap = new HashMap<>();
+            for (Order order : orders) {
+                Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                        .orElseThrow(() -> new RuntimeException("Order status not found"));
+                int orderStatusValue = orderStatus.getStatus();
+                statusCountMap.put(orderStatusValue, statusCountMap.getOrDefault(orderStatusValue, 0) + 1);
             }
+
+            // Đảm bảo tất cả trạng thái 1, 2, 3 đều có trong danh sách
+            // Trong OrderService.java
+            List<OrderStatusNumberDTO> orderStatusNumberList = new ArrayList<>();
+            for (int i = 1; i <= 4; i++) {
+                OrderStatusNumberDTO dto = new OrderStatusNumberDTO();
+                dto.setStatus(String.valueOf(i));
+                dto.setNumber(statusCountMap.getOrDefault(i, 0));
+                orderStatusNumberList.add(dto);
+            }
+
+            // Lọc đơn hàng theo trạng thái yêu cầu
+            List<OrderResponse> orderResponses = new ArrayList<>();
+            for (Order order : orders) {
+                Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                        .orElseThrow(() -> new RuntimeException("Order status not found"));
+                
+                if (orderStatus.getStatus() == status) {
+                    List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                            .orElseThrow(() -> new RuntimeException("Not found order detail!"));
+                    List<Order_DetailDTO> orderDetailDTOs = orderDetails.stream()
+                            .map(Utils::mapOrderDetail)
+                            .collect(Collectors.toList());
+
+                    OrderResponse orderResponse = OrderResponse.builder()
+                            .orderDetailDTOS(orderDetailDTOs)
+                            .order_id(order.getOrder_id())
+                            .address_line_1(order.getAddress_line_1())
+                            .address_line_2(order.getAddress_line_2())
+                            .name(order.getName())
+                            .phone(order.getPhone())
+                            .note(orderStatus.getNote())
+                            .total_price(order.getTotal_price())
+                            .date(order.getDate())
+                            .userDTO(Utils.mapUser(user))
+                            .orderStatusDTO(Utils.mapOrder_Status(orderStatus))
+                            .build();
+                    orderResponses.add(orderResponse);
+                }
+            }
+
+            // Thiết lập phản hồi
+            response.setStatus(200);
+            response.setMessage("Orders retrieved successfully");
+            response.setOrderResponses(orderResponses);
+            response.setOrderStatusNumberDTOList(orderStatusNumberList);
+
         } catch (RuntimeException e) {
             response.setStatus(201);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatus(500);
-            response.setMessage(e.getMessage());
+            response.setMessage("Server error: " + e.getMessage());
         }
         return response;
-    }    
-}
+    }
+
+    public Response getOrderById(int orderId) {
+        Response response = new Response();
+        try {
+            // Lấy đơn hàng
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", orderId));
+
+            // Lấy thông tin trạng thái đơn hàng
+            Order_Status orderStatus = orderStatusRepository.findByOrder(order)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order status", "Order ID", orderId));
+
+            // Lấy thông tin chi tiết đơn hàng
+            List<Order_Detail> orderDetails = orderDetailRepository.findAllByOrder(order)
+                    .orElseThrow(() -> new ResourceNotFoundException("OrderDetail", "Order ID", orderId));
+
+            // Chuyển sang DTO
+            List<Order_DetailDTO> orderDetailDTOs = orderDetails.stream()
+                    .map(Utils::mapOrderDetail)
+                    .collect(Collectors.toList());
+
+            // Lấy thông tin người dùng
+            User user = userRepository.findById(order.getUser_id().getUser_id())
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "ID", order.getUser_id().getUser_id()));
+
+            // Tạo đối tượng phản hồi
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderDetailDTOS(orderDetailDTOs)
+                    .order_id(order.getOrder_id())
+                    .address_line_1(order.getAddress_line_1())
+                    .address_line_2(order.getAddress_line_2())
+                    .name(order.getName())
+                    .phone(order.getPhone())
+                    .total_price(order.getTotal_price())
+                    .date(order.getDate())
+                    .note(orderStatus.getNote())
+                    .userDTO(Utils.mapUser(user))
+                    .orderStatusDTO(Utils.mapOrder_Status(orderStatus))
+                    .build();
+
+            response.setStatus(200);
+            response.setMessage("Order retrieved successfully");
+            response.setOrderResponse(orderResponse);
+
+        } catch (ResourceNotFoundException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Server error: " + e.getMessage());
+        }
+        return response;
+    }
+
+}  

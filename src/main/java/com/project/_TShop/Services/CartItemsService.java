@@ -136,5 +136,45 @@ public class CartItemsService {
         return response;
     }
 
+    public Response updateQuantity(int cartItemID, int quantity) {
+        Response response = new Response();
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Account account = accountRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
 
+            Cart cart = cartRepository.findByAccount(account)
+                    .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+            Cart_Items cartItem = cartItemsRepository.findById(cartItemID)
+                    .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+            // Kiểm tra xem cartItem có thuộc về cart của người dùng không
+            if (!cartItem.getCart().getCart_id().equals(cart.getCart_id())) {
+                throw new RuntimeException("Unauthorized access to cart item");
+            }
+
+            // Kiểm tra tồn kho
+            int stock = cartItem.getSpecifications().getQuantity();
+            if (quantity > stock) {
+                throw new RuntimeException("Số lượng vượt quá tồn kho hiện tại");
+            }
+
+            cartItem.setQuantity(quantity);
+            cartItemsRepository.save(cartItem);
+
+            List<Cart_Items> cartItems = cartItemsRepository.findByCart(cart);
+
+            response.setStatus(200);
+            response.setMessage("Cập nhật số lượng thành công");
+            response.setCart_ItemsDTOList(Utils.mapCartItems(cartItems));
+        } catch (RuntimeException e) {
+            response.setStatus(400);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Lỗi máy chủ");
+        }
+        return response;
+    }
 }

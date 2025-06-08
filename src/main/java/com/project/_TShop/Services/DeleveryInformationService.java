@@ -66,14 +66,17 @@ public class DeleveryInformationService {
                 .orElseThrow(() -> new RuntimeException("Account not found"));
             User user = userRepository.findByAccount(account)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-            Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
-            boolean isDefault = delevery_InfomationDefault == null;
             Delevery_Infomation delevery_Infomation = 
                 new Delevery_Infomation(delevery_InformationDTO.getName(), 
                                         delevery_InformationDTO.getPhone(), 
                                         delevery_InformationDTO.getAddress_line_1(), 
                                         delevery_InformationDTO.getAddress_line_2(), 
-                                        isDefault, new Date(), user);
+                                        delevery_InformationDTO.is_default(), new Date(), user);
+            if (delevery_InformationDTO.is_default()) {                
+                 Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
+                delevery_InfomationDefault.set_default(false);
+                deleveryInformationRepository.save(delevery_InfomationDefault);
+            }
             deleveryInformationRepository.save(delevery_Infomation);
             response.setStatus(200);
             response.setMessage("Create success");
@@ -89,29 +92,53 @@ public class DeleveryInformationService {
         return response;
     }
 
-    public Response editDelevery(Delevery_InformationDTO delevery_InformationDTO){
+    public Response editDelevery(Delevery_InformationDTO delevery_InformationDTO) {
         Response response = new Response();
         try {
             Delevery_Infomation delevery_Infomation = deleveryInformationRepository.findById(delevery_InformationDTO.getDe_infor_id())
-                .orElseThrow(()-> new RuntimeException("Not found delevery information"));
+                .orElseThrow(() -> new RuntimeException("Not found delivery information"));
+
+            // Cập nhật thông tin địa chỉ
             delevery_Infomation.setAddress_line_1(delevery_InformationDTO.getAddress_line_1());
             delevery_Infomation.setAddress_line_2(delevery_InformationDTO.getAddress_line_2());
-            delevery_Infomation.setName(delevery_Infomation.getName());
+            delevery_Infomation.setName(delevery_InformationDTO.getName());
             delevery_Infomation.setPhone(delevery_InformationDTO.getPhone());
+            System.out.println("default"+ delevery_InformationDTO.is_default());
+            delevery_Infomation.set_default(delevery_InformationDTO.is_default());
+            System.out.println("default entity"+ delevery_Infomation.is_default());
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            User user = userRepository.findByAccount(account)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+            System.out.println("user"+user);
+
+            if (delevery_InformationDTO.is_default()) {                
+                 Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
+                delevery_InfomationDefault.set_default(false);
+                deleveryInformationRepository.save(delevery_InfomationDefault);
+            }
+
+
             deleveryInformationRepository.save(delevery_Infomation);
             response.setStatus(200);
-            response.setMessage("Create success");
-        }catch(RuntimeException e){
+            response.setMessage("Update success");
+
+        } catch (RuntimeException e) {
             response.setStatus(202);
-            System.out.print("lỗi: " + e.getMessage());
+            System.out.print("Lỗi: " + e.getMessage());
             response.setMessage(e.getMessage());
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             response.setStatus(500);
-            response.setMessage("Error server");
+            response.setMessage("Server error");
         }
         return response;
     }
+
 
     @Transactional
     public Response setDefault(Integer idAddress){

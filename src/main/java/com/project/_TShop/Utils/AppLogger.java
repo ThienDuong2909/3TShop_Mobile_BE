@@ -5,16 +5,25 @@ import org.slf4j.LoggerFactory;
 
 public class AppLogger {
 
-    private static AppLogger instance;
+    // volatile đảm bảo visibility giữa các thread
+    private static volatile AppLogger instance;
     private final Logger logger;
 
     private AppLogger() {
         logger = LoggerFactory.getLogger(AppLogger.class);
     }
 
+    /**
+     * Thread-safe getInstance() sử dụng Double-Checked Locking Pattern
+     * @return AppLogger instance duy nhất
+     */
     public static AppLogger getInstance() {
         if (instance == null) {
-            instance = new AppLogger();
+            synchronized (AppLogger.class) {
+                if (instance == null) {
+                    instance = new AppLogger();
+                }
+            }
         }
         return instance;
     }
@@ -29,5 +38,13 @@ public class AppLogger {
 
     public void debug(String message) {
         logger.debug(message);
+    }
+    
+    public void warn(String message) {
+        logger.warn(message);
+    }
+    
+    public void trace(String message) {
+        logger.trace(message);
     }
 }
