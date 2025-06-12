@@ -205,6 +205,16 @@ public Response editInfor(UserDTO userDTO) {
             currentUser.setPhone(newPhone);
         }
 
+        if (userRepo.findByAccount(account).isEmpty()) {
+            boolean phoneExistsInUser = userRepo.existsByPhone(newPhone);
+            if (phoneExistsInUser) {
+                response.setStatus(408);
+                response.setMessage("Phone number already exists");
+                return response;
+            }
+            currentUser.setPhone(newPhone);
+        }
+
         // Cập nhật các thông tin khác
         if (userDTO.getF_name() != null) currentUser.setF_name(userDTO.getF_name());
         if (userDTO.getL_name() != null) currentUser.setL_name(userDTO.getL_name());
