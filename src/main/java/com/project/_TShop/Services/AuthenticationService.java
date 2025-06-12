@@ -97,7 +97,7 @@ public class AuthenticationService {
         }
         String registrationToken = String.valueOf((int) (Math.random() * 900000) + 100000);
 
-        // Tính thời gian hết hạn (10 phút từ hiện tại)
+
         Date registrationTokenExpiry = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
         var user = Account.builder()
                 .username(request.getUsername())
@@ -113,9 +113,8 @@ public class AuthenticationService {
                 .build();
         accountRepo.save(user);
         emailService.sendOtpEmail(user);
-        var jwtToken = jwtService.generateToken(user);
         response.setStatus(200);
-        response.setToken(jwtToken);
+        response.setMessage("Register account success, please check your email to verify");;
         return response;
     }
 
@@ -189,7 +188,7 @@ public class AuthenticationService {
         }
         return response;
     }
-    public Response updateResetPasswordTokenMobile(FogotPasswordRequest request, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+    public Response updateResetPasswordTokenMobile(FogotPasswordRequest request) throws MessagingException, UnsupportedEncodingException {
         System.out.println("Mail: "+ request.getEmail());
         Response response = new Response();
         if(!isEmailExistAndEnable(request)){
@@ -198,9 +197,12 @@ public class AuthenticationService {
         }
         Optional<Account> optionalAccount = accountRepo.findByEmail(request.getEmail());
         if (optionalAccount.isPresent()) {
-            optionalAccount.get().setResetPasswordToken(RandomString.make(50));
+            String resetPwToken = String.valueOf((int) (Math.random() * 900000) + 100000);
+            Date resetPwTokenExpiry = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
+            optionalAccount.get().setResetPasswordToken(resetPwToken);
+            optionalAccount.get().setResetPasswordTokenExpiry(resetPwTokenExpiry);
             accountRepo.save(optionalAccount.get());
-            emailService.sendEmailToResetPasswordMobile(optionalAccount.get(), req);
+            emailService.sendEmailToResetPasswordMobile(optionalAccount.get());
             response.setStatus(200);
             response.setMessage("Update Reset Password Token and Send mail success");
         } else {
@@ -212,14 +214,13 @@ public class AuthenticationService {
 
     public Response updatePassword(ResetPasswordRequest request) {
         System.out.println("New Password: " + request.getNewPassword());
-        System.out.println("request token: " + request.getToken());
+        System.out.println("request email: " + request.getEmail());
 
         Response response = new Response();
-        Optional<Account> optionalAccount = accountRepo.findByResetPasswordToken(request.getToken());
+        Optional<Account> optionalAccount = accountRepo.findByEmail(request.getEmail());
         System.out.println("Account found: " + optionalAccount);
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
-            account.setResetPasswordToken(null);
             account.setPassword(passwordEncoder.encode(request.getNewPassword()));
             accountRepo.save(account);
             response.setStatus(200);
@@ -302,6 +303,7 @@ public class AuthenticationService {
                 });
 
         String token = jwtService.generateToken(account);
+        System.out.println("token: "+token);
         response.setStatus(200);
         response.setToken(token);
         return response;
@@ -322,4 +324,37 @@ public class AuthenticationService {
     }
 
 
+    public Response verifyResetPw(VerifyResetPwRequest request) {
+        Response response = new Response();
+        Optional<Account> optionalAccount = accountRepo.findByEmail(request.getEmail());
+        if (!optionalAccount.isPresent()) {
+            response.setStatus(201);
+            response.setMessage("Email không tồn tại");
+            return response;
+        }
+
+        Account user = optionalAccount.get();
+
+        if (!user.getResetPasswordToken().equals(request.getResetPwToken())) {
+            response.setStatus(202);
+            response.setMessage("Mã OTP không đúng");
+            return response;
+        }
+
+        if (new Date().after(user.getResetPasswordTokenExpiry())) {
+            response.setStatus(203);
+            response.setMessage("Mã OTP đã hết hạn");
+            return response;
+        }
+
+        user.setStatus(true);
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        user.setStatus(true);
+        accountRepo.save(user);
+
+        response.setStatus(200);
+        response.setMessage("Xác nhận OTP thành công");
+        return response;
+    }
 }

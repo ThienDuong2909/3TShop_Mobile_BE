@@ -36,6 +36,8 @@ public class Account implements UserDetails {
 
     @Column(name="reset_password_token",columnDefinition = "varchar(50)")
     private String resetPasswordToken;
+    @Column(name="reset_password_token_expiry")
+    private Date resetPasswordTokenExpiry;
 
     @Column(name="registrationToken",columnDefinition = "varchar(50)")
     private String registrationToken;

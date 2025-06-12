@@ -1,6 +1,7 @@
 package com.project._TShop.Controllers;
 
 import com.project._TShop.Request.ChangeSatusRequest;
+import com.project._TShop.Request.DetailSpendingRequest;
 import com.project._TShop.Request.GetCategorySoldQuantityRequest;
 import com.project._TShop.Request.OrderRequest;
 import com.project._TShop.Response.Response;
@@ -39,6 +40,13 @@ public class AnalysisController {
             @RequestBody GetCategorySoldQuantityRequest request
             ){
         Response response = analysisService.getCategorySoldQuantity(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("/get-detail-spending")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getSpending(
+    ){
+        Response response = analysisService.getSpending();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

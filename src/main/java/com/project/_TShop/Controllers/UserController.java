@@ -5,7 +5,6 @@ import com.project._TShop.Request.AuthenticationRequest;
 import com.project._TShop.Request.ChangePasswordReq;
 import com.project._TShop.Request.FogotPasswordRequest;
 import com.project._TShop.Request.RegisterRequest;
-import com.project._TShop.Request.ResetPasswordRequest;
 import com.project._TShop.Response.Response;
 import com.project._TShop.Services.AccountService;
 import com.project._TShop.Services.AuthenticationService;
