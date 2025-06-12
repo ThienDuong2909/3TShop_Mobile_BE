@@ -1,5 +1,7 @@
 package com.project._TShop.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +37,20 @@ public class CartItemsController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Response> updateQuantity(@PathVariable("id") Integer id, @RequestBody CartItemRequest cartItemRequest){
         Response response = cartItemsService.updateQuantity(id, cartItemRequest.getQuantity());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getById(@PathVariable("id") Integer id){
+        Response response = cartItemsService.getById(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PostMapping("/by-ids")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Response> getCartItemsByIds(@RequestBody List<Integer> cartItemIds) {
+        Response response = cartItemsService.getCartItemsByIds(cartItemIds);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

@@ -74,8 +74,10 @@ public class DeleveryInformationService {
                                         delevery_InformationDTO.is_default(), new Date(), user);
             if (delevery_InformationDTO.is_default()) {                
                  Delevery_Infomation delevery_InfomationDefault = deleveryInformationRepository.findDefaultByUser(user);
-                delevery_InfomationDefault.set_default(false);
-                deleveryInformationRepository.save(delevery_InfomationDefault);
+                if(delevery_InfomationDefault != null){
+                    delevery_InfomationDefault.set_default(false);
+                    deleveryInformationRepository.save(delevery_InfomationDefault);
+                }
             }
             deleveryInformationRepository.save(delevery_Infomation);
             response.setStatus(200);

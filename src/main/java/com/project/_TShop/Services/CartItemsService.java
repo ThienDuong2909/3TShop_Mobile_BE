@@ -3,6 +3,7 @@ package com.project._TShop.Services;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -177,4 +178,74 @@ public class CartItemsService {
         }
         return response;
     }
+
+    public Response getCartItemsByIds(List<Integer> cartItemIds) {
+        Response response = new Response();
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Account account = accountRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            Cart cart = cartRepository.findByAccount(account)
+                    .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+            List<Cart_Items> cartItems = cartItemsRepository.findAllById(cartItemIds);
+            if (cartItems.isEmpty()) {
+                throw new RuntimeException("No cart items found for provided IDs");
+            }
+
+            // Kiểm tra quyền truy cập: tất cả cart items phải thuộc cart của user
+            List<Cart_Items> validCartItems = cartItems.stream()
+                    .filter(item -> item.getCart().getCart_id().equals(cart.getCart_id()))
+                    .collect(Collectors.toList());
+
+            if (validCartItems.isEmpty()) {
+                throw new RuntimeException("No valid cart items found for this user");
+            }
+
+            response.setStatus(200);
+            response.setMessage("Success get cart items by IDs");
+            response.setCart_ItemsDTOList(Utils.mapCartItems(validCartItems));
+        } catch (RuntimeException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
+    public Response getById(Integer id) {
+        Response response = new Response();
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Account account = accountRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+            Cart cart = cartRepository.findByAccount(account)
+                    .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+            Cart_Items cartItem = cartItemsRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+            // Kiểm tra quyền truy cập: cartItem phải thuộc cart của user hiện tại
+            if (!cartItem.getCart().getCart_id().equals(cart.getCart_id())) {
+                throw new RuntimeException("Unauthorized access to cart item");
+            }
+
+            response.setStatus(200);
+            response.setMessage("Success");
+            response.setCart_ItemsDTO(Utils.mapCart_Items(cartItem)); // Hàm này bạn cần viết trong `Utils`
+        } catch (RuntimeException e) {
+            response.setStatus(404);
+            response.setMessage(e.getMessage());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Server error");
+        }
+        return response;
+    }
+
 }
