@@ -58,4 +58,6 @@ public class Response {
     private List<ProductSpecDTO> productSpecDTOList;
 
     private List<OrderStatusNumberDTO> orderStatusNumberDTOList;
+    private List<SpendingDTO> spendingDTOList;
+
 }

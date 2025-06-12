@@ -1,14 +1,17 @@
 package com.project._TShop.Services;
 
+import com.project._TShop.DTO.OrderDTO;
 import com.project._TShop.DTO.Order_DetailDTO;
 import com.project._TShop.Entities.*;
 import com.project._TShop.Exceptions.ResourceNotFoundException;
 import com.project._TShop.Repositories.*;
 import com.project._TShop.Request.ChangeSatusRequest;
+import com.project._TShop.Request.DetailSpendingRequest;
 import com.project._TShop.Request.GetCategorySoldQuantityRequest;
 import com.project._TShop.Request.OrderDetailRequest;
 import com.project._TShop.Response.OrderResponse;
 import com.project._TShop.Response.Response;
+import com.project._TShop.Response.SpendingDTO;
 import com.project._TShop.Utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,7 @@ public class AnalysisService {
     private final CartItemsRepository cartItemsRepository;
     private final ColorRepository colorRepository;
     private final AccountRepository accountRepository;
+    private final UserService userService;
     @Autowired
     private final CategoryRepository categoryRepository;
 
@@ -250,4 +255,43 @@ public class AnalysisService {
 
         return response;
     }
+    public Response getSpending() {
+        Response response = new Response();
+        try {
+            Optional<User> optionalUser = userService.getCurrentUser();
+            if (!optionalUser.isPresent()) {
+                response.setStatus(200);
+                response.setMessage("User not found!");
+                response.setSpendingDTOList(new ArrayList<>());
+                return response;
+            }
+
+            User curUser = optionalUser.get();
+            List<Order_Status> statusList = orderStatusRepository.findAllByStatusAndUserId(3, curUser.getUser_id());
+            List<Order> orderList = statusList.stream()
+                    .map(Order_Status::getOrder_id)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            List<SpendingDTO> spendingDTOList = orderList.stream()
+                    .map(order -> new SpendingDTO(order.getOrder_id(), order.getTotal_price(), order.getDate()))
+                    .collect(Collectors.toList());
+
+            System.out.println("spendingDTOList: " + spendingDTOList);
+            response.setStatus(200);
+            response.setMessage("Get success!!");
+            response.setSpendingDTOList(spendingDTOList);
+
+        } catch (ResourceNotFoundException e) {
+            response.setStatus(201);
+            response.setMessage(e.getMessage());
+            response.setSpendingDTOList(new ArrayList<>());
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage(e.getMessage());
+            response.setSpendingDTOList(new ArrayList<>());
+        }
+        return response;
+    }
+
 }

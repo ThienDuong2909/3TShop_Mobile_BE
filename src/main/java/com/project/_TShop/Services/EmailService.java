@@ -59,7 +59,7 @@ public class EmailService {
 
         helper.setTo(user.getEmail());
         helper.setSubject(subject);
-        helper.setText(content, true); // true để hỗ trợ HTML
+        helper.setText(content, true);
         helper.setFrom("thienplpp965@gmail.com", "3TShop");
 
         mailSender.send(message);
@@ -70,7 +70,6 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom("thienplpp965@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
-//        String verifyURL = siteURL + "/reset-password?code=" + account.getResetPasswordToken();
         String verifyURL = "http://localhost:3003/reset-password?code=" + account.getResetPasswordToken();
 
         System.out.println(verifyURL);
@@ -86,21 +85,18 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendEmailToResetPasswordMobile(Account account, HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmailToResetPasswordMobile(Account account) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom("thienplpp965@gmail.com", "3TSHOP");
         helper.setTo(account.getEmail());
-
-        // Tạo link trung gian HTTPS
-        String resetToken = account.getResetPasswordToken();
-        String webLink = "https://presently-prepared-albacore.ngrok-free.app/api/v1/auth/reset-password-gate?token=" + resetToken; // Thay bằng domain thật của bạn
-
         String subject = "Đặt lại mật khẩu";
         String content = "<p>Xin chào,</p>"
-                + "<p>Nhấn vào đường dẫn bên dưới để đặt lại mật khẩu trong ứng dụng:</p>"
-                + "<p><b><a href=\"" + webLink + "\">Đặt lại mật khẩu</a></b></p>"
-                + "<p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>";
+                +"<p>Vui lòng sử dụng mã OTP dưới đây để xác nhận đặt lại mật khẩu tài khoản:</p>" +
+                "<h2>" + account.getResetPasswordToken() + "</h2>" +
+                "<p>Mã này có hiệu lực trong 10 phút.</p>" +
+                "<p>Nếu bạn không yêu cầu đặt lại maatj khẩu, vui lòng bỏ qua email này.</p>" +
+                "<p>Trân trọng,<br>Đội ngũ 3TShop</p>";
 
         helper.setSubject(subject);
         helper.setText(content, true);

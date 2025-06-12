@@ -55,6 +55,12 @@ public class AuthenticationController {
         Response response = authenticationService.verifyRegisterMobile(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    @PostMapping("/verify-reset-password-token")
+    public ResponseEntity<?> verifyResetPw(@RequestBody VerifyResetPwRequest request
+    ) throws MessagingException, UnsupportedEncodingException {
+        Response response = authenticationService.verifyResetPw(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
     @GetMapping("/verify")
     public ResponseEntity<?> verifyAccount(@RequestParam("code") String code) {
         Response response = accountService.isValidRegistrationToken(code);
@@ -69,14 +75,15 @@ public class AuthenticationController {
     }
     @PostMapping("/forgot-password-mobile")
     public ResponseEntity<?> forgotPasswordMobile(
-            @RequestBody FogotPasswordRequest request, HttpServletRequest req
+            @RequestBody FogotPasswordRequest request
     ) throws MessagingException, UnsupportedEncodingException {
-        Response response = authenticationService.updateResetPasswordTokenMobile(request, req);
+        Response response = authenticationService.updateResetPasswordTokenMobile(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @GetMapping("/reset-password-gate")
     public ResponseEntity<?> redirectToApp(@RequestParam("token") String token) {
         String deepLink = "myapp://reset-password?token=" + token;
+        System.out.println("link: "+deepLink);
         String html = "<html><body>"
                 + "<h3>Nhấn nút dưới đây để mở ứng dụng:</h3>"
                 + "<a href=\"" + deepLink + "\"><button>Mở ứng dụng</button></a>"
